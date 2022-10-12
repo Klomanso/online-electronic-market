@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit User Info</title>
+        <link href="/css/common.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-heading">
+            <h1>
+                Edit user info
+            </h1>
+        </header>
+        <aside class="sidebar">
+            <ul class="navigation">
+                <li>
+                    <a id="home-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a id="users-link" href="/users">Users</a>
+                </li>
+                <li>
+                    <a id="goods-link" href="/goods">Goods</a>
+                </li>
+                <li>
+                    <a id="orders-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="page-content">
+            <div id="user-edit">
+                <form method="POST" action="/user-save">
+                    <input type="hidden" name="user-id" th:value="${user.id}">
+
+                    <label for="user-name">Name:</label>
+                    <input id="user-name" type="text" name="user-name" required th:value="${user.name}">
+                    <br>
+                    <br>
+                    <label for="user-address">Address:</label>
+                    <input id="user-address" type="text" name="user-address" required th:value="${user.address}">
+                    <br>
+                    <br>
+                    <label for="user-email">Email:</label>
+                    <input id="user-email" type="text" name="user-email" required th:value="${user.email}">
+                    <br>
+                    <br>
+                    <label for="user-number">Phone:</label>
+                    <input id="user-number" type="text" name="user-number" th:value="${user.number}">
+                    <br>
+                    <br>
+                    <button id="save-user-button" class="btn" type="submit">
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

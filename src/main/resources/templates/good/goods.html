@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Goods</title>
+        <link href="/css/common.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-heading">
+            <h1>
+                Goods
+            </h1>
+        </header>
+        <aside class="sidebar">
+            <ul class="navigation">
+                <li>
+                    <a id="home-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a id="users-link" href="/users">Users</a>
+                </li>
+                <li>
+                    <a id="goods-link" href="/goods">Goods</a>
+                </li>
+                <li>
+                    <a id="orders-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="page-content">
+            <form method="GET" action="/goods-found">
+                <label for="good-query">Search:</label>
+                <input id="good-query" type="search" name="good-query" required value="coffeemaker">
+            </form>
+            <br>
+            <div id="goods-list">
+                <table>
+                    <tr>
+                        <th>name</th>
+                        <th>type</th>
+                        <th>price</th>
+                        <th>left</th>
+                        <th>made in</th>
+                        <th>company</th>
+                    </tr>
+                    <th:block th:each="good : ${goods}">
+                        <tr>
+                            <td>
+                                <a th:href="'/good-info?good-id=' + ${good.id}">
+                                    <span th:text="${good.name}"></span>
+                                </a>
+                            </td>
+                            <td th:text="${good.appType.name}"></td>
+                            <td th:text="${good.price}"></td>
+                            <td th:text="${good.quantity}"></td>
+                            <td th:text="${good.assemblyPlace}"></td>
+                            <td th:text="${good.company}"></td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
+            <br>
+            <form method="GET" action="/good-edit">
+                <button id="add-good-button" class="btn" type="submit">
+                    Add good
+                </button>
+            </form>
+        </div>
+    </body>
+</html>

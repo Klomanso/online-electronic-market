@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Order Info</title>
+        <link href="/css/common.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-heading">
+            <h2>
+                Order for
+                <a th:href="'/user-info?user-id=' + ${order.user.id}">
+                    <span th:text="${order.user.name}"></span>
+                </a>
+            </h2>
+        </header>
+        <aside class="sidebar">
+            <ul class="navigation">
+                <li>
+                    <a id="home-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a id="users-link" href="/users">Users</a>
+                </li>
+                <li>
+                    <a id="goods-link" href="/goods">Goods</a>
+                </li>
+                <li>
+                    <a id="orders-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="page-content">
+            <div id="order-info">
+                <h3>Order info</h3>
+                <p th:text="'id: ' + ${order.id}"></p>
+                <p th:text="'ordered at: ' + ${order.orderedAt}"></p>
+                <p th:text="'for: ' + ${order.user.name}"></p>
+                <p th:text="'delivery address: ' + ${order.deliveryAddress}"></p>
+                <p th:text="'delivery date: ' + ${order.deliverOn}"></p>
+                <p th:text="'status: ' + ${order.status.name}"></p>
+                <p th:text="'total price: ' + ${total}"></p>
+            </div>
+            <div id="order-items">
+                <h3>Order items</h3>
+                <table>
+                    <tr>
+                        <th>name</th>
+                        <th>type</th>
+                        <th>price</th>
+                        <th>number</th>
+                        <th>made in</th>
+                        <th>company</th>
+                    </tr>
+                    <th:block th:each="item : ${items}">
+                        <tr>
+                            <td>
+                                <a th:href="'/good-info?good-id=' + ${item.good.id}">
+                                    <span th:text="${item.good.name}"></span>
+                                </a>
+                            </td>
+                            <td th:text="${item.good.appType.name}"></td>
+                            <td th:text="${item.good.price}"></td>
+                            <td th:text="${item.quantity}"></td>
+                            <td th:text="${item.good.assemblyPlace}"></td>
+                            <td th:text="${item.good.company}"></td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
+            <br>
+            <div id="order-actions">
+                <form method="POST" action="/order-update-status">
+                    <input type="hidden" name="order-id" th:value="${order.id}">
+                    <button id="update-order-status-button" class="btn" type="submit">
+                        Update order status
+                    </button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

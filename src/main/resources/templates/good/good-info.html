@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Good Info</title>
+        <link href="/css/common.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-heading">
+            <h2>
+                <span th:text="${good.name}"></span>
+            </h2>
+        </header>
+        <aside class="sidebar">
+            <ul class="navigation">
+                <li>
+                    <a id="home-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a id="users-link" href="/users">Users</a>
+                </li>
+                <li>
+                    <a id="goods-link" href="/goods">Goods</a>
+                </li>
+                <li>
+                    <a id="orders-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="page-content">
+            <div id="good-info">
+                <h3>Good info</h3>
+                <p th:text="'id: ' + ${good.id}"></p>
+                <p th:text="'name: ' + ${good.name}"></p>
+                <p th:text="'type: ' + ${good.appType.name}"></p>
+                <p th:text="'price: ' + ${good.price}"></p>
+                <p th:text="'left: ' + ${good.quantity}"></p>
+                <p th:text="'made in: ' + ${good.assemblyPlace}"></p>
+                <p th:text="'company: ' + ${good.company}"></p>
+                <p th:text="'description: ' + ${good.description}"></p>
+            </div>
+            <br>
+            <div id="good-actions">
+                <form method="GET" action="/good-edit">
+                    <input type="hidden" name="good-id" th:value="${good.id}">
+                    <button id="edit-good-button" class="btn" type="submit">
+                        Edit good info
+                    </button>
+                </form>
+                <form method="POST" action="/good-delete">
+                    <input type="hidden" name="good-id" th:value="${good.id}">
+                    <button id="delete-good-button" class="btn" type="submit">
+                        Delete good
+                    </button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

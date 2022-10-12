@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit Good Info</title>
+        <link href="/css/common.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-heading">
+            <h1>
+                Edit good info
+            </h1>
+        </header>
+        <aside class="sidebar">
+            <ul class="navigation">
+                <li>
+                    <a id="home-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a id="users-link" href="/users">Users</a>
+                </li>
+                <li>
+                    <a id="goods-link" href="/goods">Goods</a>
+                </li>
+                <li>
+                    <a id="orders-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="page-content">
+            <div id="good-edit">
+                <form method="POST" action="/good-save">
+                    <input type="hidden" name="good-id" th:value="${good.id}">
+
+                    <label for="good-name">Name:</label>
+                    <input id="good-name" type="text" name="good-name" required th:value="${good.name}">
+                    <br>
+                    <br>
+                    <label for="good-price">Price:</label>
+                    <input id="good-price" type="number" min="0.01" step="0.01" name="good-price" required th:value="${good.price}">
+                    <br>
+                    <br>
+                    <label for="good-company">Company:</label>
+                    <input id="good-company" type="text" name="good-company" required th:value="${good.company}">
+                    <br>
+                    <br>
+                    <label for="good-assembly-place">Made in:</label>
+                    <input id="good-assembly-place" type="text" name="good-assembly-place" required th:value="${good.assemblyPlace}">
+                    <br>
+                    <br>
+                    <label for="good-quantity">Quantity:</label>
+                    <input id="good-quantity" type="number" min="0" name="good-quantity" required th:value="${good.quantity}">
+                    <br>
+                    <br>
+                    <label for="good-description">Description:</label>
+                    <input id="good-description" type="text" name="good-description" th:value="${good.description}">
+                    <br>
+                    <br>
+                    <label for="good-type">Type:</label>
+                    <br>
+                    <select id="good-type" name="good-type-id" size="4" required>
+                        <option th:each="type : ${types}"
+                                th:value="${type.id}"
+                                th:text="${type.name}">
+                        </option>
+                    </select>
+                    <br>
+                    <br>
+                    <button id="save-good-button" class="btn" type="submit">
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

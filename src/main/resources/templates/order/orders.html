@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Orders</title>
+        <link href="/css/common.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-heading">
+            <h1>
+                Orders
+            </h1>
+        </header>
+        <aside class="sidebar">
+            <ul class="navigation">
+                <li>
+                    <a id="home-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a id="users-link" href="/users">Users</a>
+                </li>
+                <li>
+                    <a id="goods-link" href="/goods">Goods</a>
+                </li>
+                <li>
+                    <a id="orders-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="page-content">
+            <form method="GET" action="/order-add">
+                <button id="add-order-button" class="btn" type="submit">
+                    Add new order
+                </button>
+            </form>
+            <br>
+            <div id="orders-list">
+                <table>
+                    <tr>
+                        <th>ordered at</th>
+                        <th>for</th>
+                        <th>delivery address</th>
+                        <th>delivery date</th>
+                        <th>status</th>
+                    </tr>
+                    <th:block th:each="order : ${orders}">
+                        <tr>
+                            <td th:text="${order.orderedAt}"></td>
+                            <td th:text="${order.user.name}"></td>
+                            <td th:text="${order.deliveryAddress}"></td>
+                            <td th:text="${order.deliverOn}"></td>
+                            <td>
+                                <a th:href="'/order-info?order-id=' + ${order.id}">
+                                    <span th:text="${order.status.name}"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

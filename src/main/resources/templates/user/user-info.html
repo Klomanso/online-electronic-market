@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>User Info</title>
+        <link href="/css/common.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-heading">
+            <h2>
+                <span id="user-name" th:text="'User ' + ${user.name}"></span>
+            </h2>
+        </header>
+        <aside class="sidebar">
+            <ul class="navigation">
+                <li>
+                    <a id="home-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a id="users-link" href="/users">Users</a>
+                </li>
+                <li>
+                    <a id="goods-link" href="/goods">Goods</a>
+                </li>
+                <li>
+                    <a id="orders-link" href="/orders">Orders</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="page-content">
+            <div id="user-info">
+                <h3>User info</h3>
+                <p th:text="'id: ' + ${user.id}"></p>
+                <p th:text="'name: ' + ${user.name}"></p>
+                <p th:text="'address: ' + ${user.address}"></p>
+                <p th:text="'email: ' + ${user.email}"></p>
+                <p th:text="'number: ' + ${user.number}"></p>
+            </div>
+            <br>
+            <div id="user-actions">
+                <form method="GET" action="/user-edit">
+                    <input type="hidden" name="user-id" th:value="${user.id}">
+                    <button id="edit-user-button" class="btn" type="submit">
+                        Edit user info
+                    </button>
+                </form>
+                <form method="POST" action="/user-delete">
+                    <input type="hidden" name="user-id" th:value="${user.id}">
+                    <button id="delete-user-button" class="btn" type="submit">
+                        Delete user
+                    </button>
+                </form>
+            </div>
+            <br>
+            <div id="user-orders">
+                <h3>User orders</h3>
+                <table>
+                    <tr>
+                        <th>ordered at</th>
+                        <th>delivery address</th>
+                        <th>delivery date</th>
+                        <th>status</th>
+                    </tr>
+                    <th:block th:each="order : ${orders}">
+                        <tr>
+                            <td th:text="${order.orderedAt}"></td>
+                            <td th:text="${order.deliveryAddress}"></td>
+                            <td th:text="${order.deliverOn}"></td>
+                            <td>
+                                <a th:href="'/order-info?order-id=' + ${order.id}">
+                                    <span th:text="${order.status.name}"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
