@@ -1,7 +1,11 @@
 package org.project.onlineelectronicmarket.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.project.onlineelectronicmarket.model.Good;
 import org.project.onlineelectronicmarket.repository.GoodRepository;
@@ -69,5 +73,11 @@ public class GoodService {
 
         public boolean hasOrderEntries(Good param) {
                 return goodRepository.hasOrderEntries(param);
+        }
+
+        public Set<Good> findAllMatches(String query) {
+                return Stream.of( this.findByNameContaining(query), this.findByCompanyContaining(query),
+                                this.findByAssemblyPlaceContaining(query), this.findByDescriptionContaining(query) )
+                        .flatMap(Collection::stream).collect(Collectors.toSet());
         }
 }

@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class GoodController {
@@ -30,34 +31,54 @@ public class GoodController {
                 this.appTypeService = appTypeService;
         }
 
+/*
         @GetMapping("/goods")
         public String getGoods(Model model) {
                 List<Good> goods = goodService.findAllByOrderByName();
                 model.addAttribute("goods", goods);
                 return "good/goods";
         }
+*/
 
-        @GetMapping("/goods-found")
-        public String getGoodsByQuery(@RequestParam(name = "good-query") String query,
-                                      Model model) {
-                List<Good> foundByName = goodService.findByNameContaining(query);
-                List<Good> foundByCompany = goodService.findByCompanyContaining(query);
-                List<Good> foundByAssemblyPlace = goodService.findByAssemblyPlaceContaining(query);
-                List<Good> foundByDescription = goodService.findByDescriptionContaining(query);
-
-                Set<Good> foundGoods = Stream.of(
-                                foundByName,
-                                foundByCompany,
-                                foundByAssemblyPlace,
-                                foundByDescription)
-                        .flatMap(Collection::stream)
-                        .collect(Collectors.toSet());
-
-                model.addAttribute("goods", foundGoods);
-                model.addAttribute("query", new ErrorMsg(query));
-                return "good/goods-found";
+        @GetMapping("/goods")
+        public ModelAndView getGoods(ModelAndView modelAndView) {
+                List<Good> goods = goodService.findAllByOrderByName();
+                modelAndView.addObject("goods", goods);
+                modelAndView.setViewName("good/goods");
+                return modelAndView;
         }
 
+        /*
+                @GetMapping("/goods-found")
+                public String getGoodsByQuery(@RequestParam(name = "good-query") String query,
+                                              Model model) {
+                        List<Good> foundByName = goodService.findByNameContaining(query);
+                        List<Good> foundByCompany = goodService.findByCompanyContaining(query);
+                        List<Good> foundByAssemblyPlace = goodService.findByAssemblyPlaceContaining(query);
+                        List<Good> foundByDescription = goodService.findByDescriptionContaining(query);
+
+                        Set<Good> foundGoods = Stream.of(
+                                        foundByName,
+                                        foundByCompany,
+                                        foundByAssemblyPlace,
+                                        foundByDescription)
+                                .flatMap(Collection::stream)
+                                .collect(Collectors.toSet());
+
+                        model.addAttribute("goods", foundGoods);
+                        model.addAttribute("query", new ErrorMsg(query));
+                        return "good/goods-found";
+                }
+        */
+        @GetMapping("/goods-found")
+        public ModelAndView getGoodsByQuery(@RequestParam(name = "good-query") String query, ModelAndView modelAndView) {
+                modelAndView.addObject("goods", goodService.findAllMatches(query));
+                modelAndView.addObject("query", new ErrorMsg(query));
+                modelAndView.setViewName("good/goods-found");
+                return modelAndView;
+        }
+
+/*
         @GetMapping("/good-info")
         public String getGoodInfo(@RequestParam(name = "good-id") Long id,
                                   Model model) {
@@ -71,7 +92,23 @@ public class GoodController {
                         return "error/invalid-action";
                 }
         }
+*/
 
+        @GetMapping("/good-info")
+        public ModelAndView getGoodInfo(@RequestParam(name = "good-id") Long id, ModelAndView modelAndView) {
+
+                Optional<Good> foundGood = goodService.findById(id);
+
+                if(foundGood.isPresent()) {
+                        modelAndView.addObject("good", foundGood.get());
+                        modelAndView.setViewName("good/good-info");
+                } else {
+                        modelAndView.addObject("error", new ErrorMsg("There is no good with id=" + id));
+                        modelAndView.setViewName("error/invalid-action");
+                }
+
+                return modelAndView;
+        }
         /*
          * If given good id is null then adds new good.
          * Otherwise, returns good info (to let then update it).
