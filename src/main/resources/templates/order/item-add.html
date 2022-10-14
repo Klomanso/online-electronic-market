@@ -4,30 +4,27 @@
         <meta charset="UTF-8">
         <title>Add Item</title>
         <link href="/css/common.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/navbar.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     </head>
     <body>
-        <header class="page-heading">
-            <h1>
-                Add item
-            </h1>
-        </header>
-        <aside class="sidebar">
-            <ul class="navigation">
-                <li>
-                    <a id="home-link" href="/">Home</a>
-                </li>
-                <li>
-                    <a id="users-link" href="/users">Users</a>
-                </li>
-                <li>
-                    <a id="goods-link" href="/goods">Goods</a>
-                </li>
-                <li>
-                    <a id="orders-link" href="/orders">Orders</a>
-                </li>
-            </ul>
-        </aside>
-        <div class="page-content">
+    <nav>
+        <label>Add item</label>
+        <ul>
+
+            <li><a id="home-link" href="/">Home</a></li>
+            <li><a id="users-link" href="/users">Users</a></li>
+            <li><a id="goods-link" href="/goods">Goods</a></li>
+            <li class="active"><a id="orders-link" href="/orders">Orders</a></li>
+
+        </ul>
+    </nav>
+    <script src="/js/nav_ul_li.js"></script>
+    <script src="/js/scroll.js"></script>
+
+    <br><br><br><br><br>
+
+    <div class="page-content">
             <div id="item-add">
                 <form method="GET" action="/order-show-basket">
                     <label for="good-id">Item:</label>
