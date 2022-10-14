@@ -41,7 +41,7 @@ label{
     line-height: 80px;
     padding: 0 80px;
     font-size: 40px;
-    color: #28e00c;
+    color: #031002;
     letter-spacing: -1px;
     user-select: none;
 }
@@ -58,15 +58,15 @@ nav ul li{
     margin: 0 5px;
 }
 nav ul li.active a{
-    color: #28f168;
-    box-shadow: inset 0 0 5px #09d084,
-    inset 0 0 10px #69ef84,
+    color: #000702;
+    box-shadow: inset 0 0 5px #030e0a,
+    inset 0 0 10px #c5c0c0,
     inset 0 0 15px #d6f5d8;
 }
 nav ul li:hover a{
-    color: #28f168;
-    box-shadow: inset 0 0 5px #09d084,
-    inset 0 0 10px #69ef84,
+    color: #000201;
+    box-shadow: inset 0 0 5px #072617,
+    inset 0 0 10px #c4c4c4,
     inset 0 0 15px #d6f5d8;
 }
 nav ul li a{
@@ -79,9 +79,9 @@ nav ul li a{
     font-family: 'Open Sans',sans-serif;
 }
 nav ul li a.active2{
-    color: #28f168;
-    box-shadow: inset 0 0 5px #09d084,
-    inset 0 0 10px #69ef84,
+    color: #010c04;
+    box-shadow: inset 0 0 5px #061f14,
+    inset 0 0 10px #505050,
     inset 0 0 15px #d6f5d8;
 }
 .content{
@@ -109,7 +109,7 @@ nav ul li a.active2{
     font-family: 'Noto Sans', sans-serif;
 }
 center{
-    color: #38e554;
+    color: #030000;
     font-size: 22px;
     margin-bottom: 20px;
 }
