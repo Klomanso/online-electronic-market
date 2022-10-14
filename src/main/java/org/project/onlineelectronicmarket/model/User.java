@@ -13,6 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -29,15 +33,30 @@ public class User implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
+        @Size(min = 1, max = 70, message = "size range: [1-70] symbols")
+        @NotBlank(message = "Name is required")
         @Column(name = "user_name", nullable = false, length = 70)
         private String name;
 
+        @Size(min = 1, max = 50, message = "size range: [1-50] symbols")
+        @NotBlank(message = "Address is required")
         @Column(name = "user_address", nullable = false, length = 50)
         private String address;
 
+        @Email
+        @NotBlank(message = "Email is required")
+        @Size(min = 1, max = 30, message = "size range: [1-30] symbols")
         @Column(name = "user_email", nullable = false, length = 30)
         private String email;
 
+        @NotBlank(message = "Number is required")
+        @Size(min = 1, max = 30, message = "size range: [1-20] symbols")
+        @Pattern(regexp = """
+                \\+(9[976]\\d|8[987530]\\d|6[987]\\d|5[90]\\d|42\\d|3[875]\\d|
+                2[98654321]\\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|
+                4[987654310]|3[9643210]|2[70]|7|1)\\d{1,14}$
+                """,
+                message = "Invalid phone number")
         @Column(name = "user_number", length = 20)
         private String number;
 
