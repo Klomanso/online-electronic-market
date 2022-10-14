@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
+
 @Controller
 public class UserController {
         private final UserService userService;
@@ -73,10 +75,10 @@ public class UserController {
          */
         @PostMapping("/user-save")
         public String saveUserInfo(@RequestParam(name = "user-id", required = false) Long id,
-                                   @RequestParam(name = "user-name") String name,
-                                   @RequestParam(name = "user-address") String address,
-                                   @RequestParam(name = "user-email") String email,
-                                   @RequestParam(name = "user-number", required = false) String number,
+                                   @Valid @RequestParam(name = "user-name") String name,
+                                   @Valid @RequestParam(name = "user-address") String address,
+                                   @Valid @RequestParam(name = "user-email") String email,
+                                   @Valid @RequestParam(name = "user-number", required = false) String number,
                                    Model model) {
 
                 boolean successfullySaved;
@@ -128,4 +130,5 @@ public class UserController {
                         return "redirect:/users";
                 }
         }
+
 }

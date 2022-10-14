@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
+
 @Controller
 public class OrderController {
 
@@ -110,9 +112,9 @@ public class OrderController {
 
         @PostMapping("/order-save")
         public String orderSave(@RequestParam(name = "order-user-id") Long userId,
-                                @RequestParam(name = "order-delivery-address") String deliveryAddress,
+                                @Valid @RequestParam(name = "order-delivery-address") String deliveryAddress,
                                 @RequestParam(name = "order-deliver-on", required = false)
-                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                 LocalDate deliverOn,
                                 Model model) {
                 LocalDateTime now = trimToMinutes(LocalDateTime.now());

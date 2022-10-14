@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "good")
@@ -29,20 +30,32 @@ public class Good implements Serializable {
         private AppType appType;
 
         @Column(name = "good_name", nullable = false, length = 100)
+        @NotBlank(message = "Appliance type is required")
+        @Size(min = 1, max = 100, message = "size range: [1-100] symbols")
         private String name;
 
+        @Min(value = 0)
+        @Max(value = 1_000_000)
         @Column(name = "good_price", nullable = false)
         private Double price;
 
+        @NotBlank(message = "Company is required")
+        @Size(min = 1, max = 50, message = "size range: [1-50] symbols")
         @Column(name = "good_company", length = 50)
         private String company;
 
+        @NotBlank(message = "assembly_place is required")
+        @Size(min = 1, max = 50, message = "size range: [1-50] symbols")
         @Column(name = "good_assembly_place", length = 50)
         private String assemblyPlace;
 
+        @Min(value = 0)
+        @Max(value = 100000)
         @Column(name = "good_quantity", nullable = false)
         private Integer quantity = 0;
 
+        @NotBlank(message = "description is required")
+        @Size(min = 1, max = 400, message = "size range: [1-400] symbols")
         @Column(name = "good_description", length = 400)
         private String description;
 

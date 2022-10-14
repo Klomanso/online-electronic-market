@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "app_type")
@@ -23,6 +25,8 @@ public class AppType implements Serializable {
         private Long id;
 
         @Column(name = "app_type_name", nullable = false, length = 30)
+        @NotBlank(message = "Appliance type is required")
+        @Size(min = 1, max = 30, message = "size range: [1-30] symbols")
         private String name;
 
         public AppType() {

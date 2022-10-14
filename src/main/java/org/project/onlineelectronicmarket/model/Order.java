@@ -17,6 +17,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -40,6 +44,8 @@ public class Order implements Serializable {
         @JoinColumn(name = "status_id")
         private Status status = new Status("processing");
 
+        @NotBlank(message = "Delivery address is required")
+        @Size(min = 1, max = 50, message = "size range: [1-50] symbols")
         @Column(name = "order_delivery_address", nullable = false, length = 50)
         private String deliveryAddress;
 

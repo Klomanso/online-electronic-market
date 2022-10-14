@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
+
 @Controller
 public class GoodController {
 
@@ -142,12 +144,12 @@ public class GoodController {
          */
         @PostMapping("/good-save")
         public String saveGoodInfo(@RequestParam(name = "good-id", required = false) Long id,
-                                   @RequestParam(name = "good-name") String name,
-                                   @RequestParam(name = "good-price") Double price,
-                                   @RequestParam(name = "good-company") String company,
-                                   @RequestParam(name = "good-assembly-place") String assemblyPlace,
-                                   @RequestParam(name = "good-quantity") Integer quantity,
-                                   @RequestParam(name = "good-description", required = false) String description,
+                                   @Valid @RequestParam(name = "good-name") String name,
+                                   @Valid @RequestParam(name = "good-price") Double price,
+                                   @Valid @RequestParam(name = "good-company") String company,
+                                   @Valid @RequestParam(name = "good-assembly-place") String assemblyPlace,
+                                   @Valid @RequestParam(name = "good-quantity") Integer quantity,
+                                   @Valid @RequestParam(name = "good-description", required = false) String description,
                                    @RequestParam(name = "good-type-id") Long appTypeId,
                                    Model model) {
                 boolean successfullySaved;
