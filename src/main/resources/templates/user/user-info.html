@@ -4,29 +4,26 @@
         <meta charset="UTF-8">
         <title>User Info</title>
         <link href="/css/common.css" rel="stylesheet">
+        <link rel="stylesheet" href="/css/navbar.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     </head>
     <body>
-        <header class="page-heading">
-            <h2>
-                <span id="user-name" th:text="'User ' + ${user.name}"></span>
-            </h2>
-        </header>
-        <aside class="sidebar">
-            <ul class="navigation">
-                <li>
-                    <a id="home-link" href="/">Home</a>
-                </li>
-                <li>
-                    <a id="users-link" href="/users">Users</a>
-                </li>
-                <li>
-                    <a id="goods-link" href="/goods">Goods</a>
-                </li>
-                <li>
-                    <a id="orders-link" href="/orders">Orders</a>
-                </li>
-            </ul>
-        </aside>
+    <nav>
+        <label id="user-name" th:text="'User ' + ${user.name}">name</label>
+        <ul>
+
+            <li><a id="home-link" href="/">Home</a></li>
+            <li class="active"><a id="users-link" href="/users">Users</a></li>
+            <li><a id="goods-link" href="/goods">Goods</a></li>
+            <li><a id="orders-link" href="/orders">Orders</a></li>
+
+        </ul>
+    </nav>
+    <script src="/js/nav_ul_li.js"></script>
+    <script src="/js/scroll.js"></script>
+
+    <br><br><br><br><br>
+
         <div class="page-content">
             <div id="user-info">
                 <h3>User info</h3>
