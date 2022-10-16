@@ -18,10 +18,10 @@ import org.project.onlineelectronicmarket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
@@ -57,10 +57,11 @@ public class OrderController {
         }
 
         @GetMapping("/orders")
-        public String getOrders(Model model) {
+        public ModelAndView getOrders(ModelAndView modelAndView) {
                 List<Order> orders = orderService.findAllByOrderByOrderedAtDesc();
-                model.addAttribute("orders", orders);
-                return "order/orders";
+                modelAndView.addObject("orders", orders);
+                modelAndView.setViewName("order/orders");
+                return modelAndView;
         }
 
         @GetMapping("/order-add")
@@ -70,14 +71,17 @@ public class OrderController {
         }
 
         @GetMapping("/order-show-basket")
-        public String showBasket(@RequestParam(name = "good-id") Long goodId,
-                                 @RequestParam(name = "item-number") Integer itemNumber,
-                                 Model model) {
+        public ModelAndView showBasket(@RequestParam(name = "good-id") Long goodId,
+                                 @RequestParam(name = "item-number") Integer itemNumber, ModelAndView modelAndView) {
+
                 Optional<Good> foundGood = goodService.findById(goodId);
+
                 if (foundGood.isEmpty()) {
-                        model.addAttribute("error", new ErrorMsg("There is no good with id=" + goodId));
-                        return "error/invalid-action";
+                        modelAndView.addObject("error", new ErrorMsg("There is no good with id=" + goodId));
+                        modelAndView.setViewName("error/invalid-action");
+                        return modelAndView;
                 }
+
                 Good good = foundGood.get();
 
                 if (basket.containsKey(good)) {
@@ -86,46 +90,55 @@ public class OrderController {
                         basket.put(good, itemNumber);
                 }
 
-                model.addAttribute("items", basket.keySet());
-                model.addAttribute("basket", basket);
-                return "order/order-show-basket";
+                modelAndView.addObject("items", basket.keySet());
+                modelAndView.addObject("basket", basket);
+                modelAndView.setViewName("order/order-show-basket");
+
+                return modelAndView;
         }
 
         @GetMapping("/item-add")
-        public String addNewItemToBasket(Model model) {
+        public ModelAndView addNewItemToBasket(ModelAndView modelAndView) {
                 List<Good> goods = goodService.findAll();
-                model.addAttribute("goods", goods);
-                return "order/item-add";
+                modelAndView.addObject("goods", goods);
+                modelAndView.setViewName("order/item-add");
+                return modelAndView;
         }
 
         @GetMapping("/order-checkout")
-        public String selectUserAndDeliveryTerms(Model model) {
+        public ModelAndView selectUserAndDeliveryTerms(ModelAndView modelAndView) {
                 if (basket.isEmpty()) {
-                        model.addAttribute("error", new ErrorMsg("You should select at least one item"));
-                        return "error/invalid-action";
+                        modelAndView.addObject("error", new ErrorMsg("You should select at least one item"));
+                        modelAndView.setViewName("error/invalid-action");
+                        return modelAndView;
                 }
-                model.addAttribute("basket", basket);
+                modelAndView.addObject("basket", basket);
                 List<User> users = userService.findAll();
-                model.addAttribute("users", users);
-                return "order/order-checkout";
+                modelAndView.addObject("users", users);
+                modelAndView.setViewName("order/order-checkout");
+
+                return modelAndView;
         }
 
         @PostMapping("/order-save")
-        public String orderSave(@RequestParam(name = "order-user-id") Long userId,
+        public ModelAndView orderSave(@RequestParam(name = "order-user-id") Long userId,
                                 @Valid @RequestParam(name = "order-delivery-address") String deliveryAddress,
                                 @RequestParam(name = "order-deliver-on", required = false)
                                 @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                 LocalDate deliverOn,
-                                Model model) {
+                                ModelAndView modelAndView) {
+
                 LocalDateTime now = trimToMinutes(LocalDateTime.now());
 
                 Optional<User> foundUser = userService.findById(userId);
                 if (foundUser.isEmpty()) {
-                        model.addAttribute("error", new ErrorMsg("There is no user with id="
+                        modelAndView.addObject("error", new ErrorMsg("There is no user with id="
                                 + userId)
                                 + ". Therefore, cannot add an order for her/him");
-                        return "error/invalid-action";
+                        modelAndView.setViewName("error/invalid-action");
+                        return modelAndView;
                 }
+
                 User user = foundUser.get();
 
                 Order order = new Order(now, statusService.processing(),
@@ -147,20 +160,22 @@ public class OrderController {
 
                 Order newOrder = orderService.save(order);
                 if (newOrder.getId() != null) {
-                        return "redirect:/order-info?order-id=" + newOrder.getId();
+                        modelAndView.setViewName("redirect:/order-info?order-id=" + newOrder.getId());
                 } else {
-                        model.addAttribute("error", new ErrorMsg("Cannot save order info"));
-                        return "error/invalid-action";
+                        modelAndView.addObject("error", new ErrorMsg("Cannot save order info"));
+                        modelAndView.setViewName("error/invalid-action");
                 }
+
+                return modelAndView;
         }
 
         @PostMapping("/order-update-status")
-        public String orderUpdateStatus(@RequestParam(name = "order-id") Long id,
-                                        Model model) {
+        public ModelAndView orderUpdateStatus(@RequestParam(name = "order-id") Long id, ModelAndView modelAndView) {
                 Optional<Order> foundOrder = orderService.findById(id);
+
                 if (foundOrder.isEmpty()) {
-                        model.addAttribute("error", new ErrorMsg("There is no order with id=" + id));
-                        return "error/invalid-action";
+                        modelAndView.addObject("error", new ErrorMsg("There is no order with id=" + id));
+                        modelAndView.setViewName("error/invalid-action");
                 } else {
                         Order order = foundOrder.get();
                         if (order.getStatus().equals(statusService.processing())) {
@@ -168,39 +183,45 @@ public class OrderController {
                         } else if (order.getStatus().equals(statusService.complete())) {
                                 order.setStatus(statusService.delivered());
                         } else {
-                                model.addAttribute("error", new ErrorMsg("Order is already delivered"));
-                                return "error/invalid-action";
+                                modelAndView.addObject("error", new ErrorMsg("Order is already delivered"));
+                                modelAndView.setViewName("error/invalid-action");
+                                return modelAndView;
                         }
+
                         Optional<Order> updatedOrder = orderService.update(order);
+
                         if (updatedOrder.isPresent()) {
-                                return "redirect:/order-info?order-id=" + updatedOrder.get().getId();
+                                modelAndView.setViewName("redirect:/order-info?order-id=" + updatedOrder.get().getId());
                         } else {
-                                model.addAttribute("error", new ErrorMsg("Cannot update order status"));
-                                return "error/invalid-action";
+                                modelAndView.addObject("error", new ErrorMsg("Cannot update order status"));
+                                modelAndView.setViewName("error/invalid-action");
                         }
                 }
+                return modelAndView;
         }
 
         @GetMapping("/order-info")
-        public String getOrderInfo(@RequestParam(name = "order-id") Long id,
-                                   Model model) {
+        public ModelAndView getOrderInfo(@RequestParam(name = "order-id") Long id, ModelAndView modelAndView) {
                 Optional<Order> foundOrder = orderService.findById(id);
+
                 if (foundOrder.isPresent()) {
                         Order order = foundOrder.get();
-                        model.addAttribute("order", order);
-                        model.addAttribute("items", order.getGoodItems());
+                        modelAndView.addObject("order", order);
+                        modelAndView.addObject("items", order.getGoodItems());
 
                         double totalPrice = 0.0;
                         List<OrderGood> items = order.getGoodItems();
                         for (OrderGood item : items) {
                                 totalPrice += item.getQuantity() * item.getGood().getPrice();
                         }
-                        model.addAttribute("total", totalPrice);
+                        modelAndView.addObject("total", totalPrice);
+                        modelAndView.setViewName("order/order-info");
 
-                        return "order/order-info";
                 } else {
-                        model.addAttribute("error", new ErrorMsg("There is no order with id=" + id));
-                        return "error/invalid-action";
+                        modelAndView.addObject("error", new ErrorMsg("There is no order with id=" + id));
+                        modelAndView.setViewName("error/invalid-action");
                 }
+
+                return modelAndView;
         }
 }
