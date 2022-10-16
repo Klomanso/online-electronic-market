@@ -27,11 +27,11 @@
 <br><br><br><br>
 
 <div class="page-content">
-    <form method="GET" action="/user-edit">
-        <button id="add-user-button" class="btn btn btn-outline-dark" type="submit">
-            Add user
-        </button>
-    </form>
+        <a id="add-user-button" class="btn btn-outline-dark" th:href="@{/user/add}"
+           role="button">Add user</a>
+<!--
+        <a th:href="@{/userInfo/{id}(id=6)}"></a>
+-->
     <br>
     <div id="users-list">
         <table class="table table-hover">
@@ -45,7 +45,7 @@
             <th:block th:each="user : ${users}">
                 <tr>
                     <td>
-                        <a th:href="'/user-info?user-id=' + ${user.id}">
+                        <a th:href="@{/userInfo/{id}(id=${user.id})}">
                             <span th:text="${user.name}"></span>
                         </a>
                     </td>
