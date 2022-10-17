@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -48,92 +47,50 @@ public class UserController {
                 return modelAndView;
         }
 
-        /*
-         * If given user id is null then adds new user.
-         * Otherwise, returns user info (to let then update it).
-         */
         @GetMapping("/userEdit/{id}")
         public ModelAndView editUserInfo(@PathVariable("id") Long id, ModelAndView modelAndView) {
-                if (id == null) {
-                        modelAndView.addObject("user", new User());
-                        modelAndView.setViewName("user/userEdit");
-                } else {
-                        Optional<User> foundUser = userService.findById(id);
+                Optional<User> foundUser = userService.findById(id);
 
-                        if (foundUser.isEmpty()) {
-                                modelAndView.addObject("error", new ErrorMsg("There is no user with id=" + id));
-                                modelAndView.setViewName("error/invalid-action");
-                        } else {
-                                modelAndView.addObject("user", foundUser.get());
-                                modelAndView.setViewName("user/userEdit");
-                        }
+                if (foundUser.isEmpty()) {
+                        modelAndView.addObject("error", new ErrorMsg("There is no user with id=" + id));
+                        modelAndView.setViewName("error/invalid-action");
+                } else {
+                        modelAndView.addObject("add", false);
+                        modelAndView.addObject("user", foundUser.get());
+                        modelAndView.setViewName("user/userEdit");
                 }
                 return modelAndView;
         }
 
-        @GetMapping(value = {"/user/add"})
-        public ModelAndView showAddContact(ModelAndView modelAndView) {
+        @GetMapping("/user/add")
+        public ModelAndView showAddUser(ModelAndView modelAndView) {
 
-                //todo: add true may be not mandatory
                 modelAndView.addObject("add", true);
                 modelAndView.addObject("user", new User());
                 modelAndView.setViewName("user/userEdit");
-                return modelAndView;
-        }
-        /*
-         * If given id is null then saves new user with given characteristics.
-         * Otherwise, updates user info.
-         */
-        @PostMapping("/user-save")
-        public ModelAndView saveUserInfo(@RequestParam(name = "user-id", required = false) Long id,
-                                   @Valid @RequestParam(name = "user-name") String name,
-                                   @Valid @RequestParam(name = "user-address") String address,
-                                   @Valid @RequestParam(name = "user-email") String email,
-                                   @Valid @RequestParam(name = "user-number", required = false) String number,
-                                   ModelAndView modelAndView) {
-
-                boolean successfullySaved;
-                User savedUser = null;
-
-                if (id == null) {
-                        User user = new User(name, address, email, number);
-                        User newUser = userService.save(user);
-                        successfullySaved = (newUser.getId() != null);
-                        if (successfullySaved) {
-                                savedUser = newUser;
-                        }
-                } else {
-                        Optional<User> foundUser = userService.findById(id);
-                        if (foundUser.isEmpty()) {
-                                modelAndView.addObject("error", new ErrorMsg("There is no user with id=" + id));
-                                modelAndView.setViewName("error/invalid-action");
-                                return modelAndView;
-                        } else {
-                                User user = foundUser.get();
-                                user.setName(name);
-                                user.setAddress(address);
-                                user.setEmail(email);
-                                user.setNumber(number);
-                                Optional<User> updatedUser = userService.update(user);
-                                successfullySaved = updatedUser.isPresent();
-                                if (successfullySaved) {
-                                        savedUser = updatedUser.get();
-                                }
-                        }
-                }
-
-                if (successfullySaved) {
-                       //TODO: PathVariable
-                       //
-                       //
-                        modelAndView.setViewName("redirect:/userInfo/{id}");
-                } else {
-                        modelAndView.addObject("error", new ErrorMsg("Cannot save user info"));
-                        modelAndView.setViewName("error/invalid-action");
-                }
 
                 return modelAndView;
         }
+
+        @PostMapping(value = "/user/add")
+        public ModelAndView addUser(ModelAndView modelAndView, @ModelAttribute("user") User user) {
+                User newUser = userService.save(user);
+
+                modelAndView.addObject("user", newUser);
+                modelAndView.setViewName("redirect:/userInfo/" + newUser.getId());
+
+                return modelAndView;
+        }
+
+        @PostMapping("/user/save/{id}")
+        public ModelAndView saveUserInfo(@ModelAttribute("user") User user, @PathVariable("id") Long id, ModelAndView modelAndView) {
+                user.setId(id);
+                userService.update(user);
+                modelAndView.setViewName("redirect:/userInfo/" + user.getId());
+
+                return modelAndView;
+        }
+
 
         @PostMapping("/user/delete/{id}")
         public ModelAndView delete(@PathVariable("id") Long id, ModelAndView modelAndView) {
@@ -149,21 +106,4 @@ public class UserController {
 
                 return modelAndView;
         }
-/*
-        @PostMapping("/user-delete")
-        public ModelAndView deleteUser(@RequestParam(name = "user-id") Long id, ModelAndView modelAndView) {
-                Optional<User> foundUser = userService.findById(id);
-
-                if (foundUser.isEmpty()) {
-                        modelAndView.addObject("error", new ErrorMsg("There is no user with id=" + id));
-                        modelAndView.setViewName("error/invalid-action");
-                } else {
-                        userService.delete(foundUser.get());
-                        modelAndView.setViewName("redirect:/users");
-                }
-
-                return modelAndView;
-        }
-*/
-
 }

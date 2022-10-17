@@ -73,6 +73,10 @@ public class User implements Serializable {
                 this.number = number;
         }
 
+        public void setId(Long id) {
+                this.id = id;
+        }
+
         public void addOrder(Order order) {
                 orders.add(order);
         }
