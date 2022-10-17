@@ -5,6 +5,9 @@
         <title>Good Info</title>
         <link href="/css/common.css" rel="stylesheet">
         <link rel="stylesheet" href="/css/navbar.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+              crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     </head>
     <body>
@@ -37,20 +40,12 @@
                 <p th:text="'description: ' + ${good.description}"></p>
             </div>
             <br>
-            <div id="good-actions">
-                <form method="GET" action="/good-edit">
-                    <input type="hidden" name="good-id" th:value="${good.id}">
-                    <button id="edit-good-button" class="btn" type="submit">
-                        Edit good info
-                    </button>
-                </form>
-                <form method="POST" action="/good-delete">
-                    <input type="hidden" name="good-id" th:value="${good.id}">
-                    <button id="delete-good-button" class="btn" type="submit">
-                        Delete good
-                    </button>
-                </form>
-            </div>
+        <div id="good-actions">
+            <a class="btn btn-warning" th:href="@{/goodEdit/{id}(id=${good.id})}" role="button">Edit</a>
+            <form th:action="@{/good/delete/{id}(id=${good.id})}" method="POST">
+                <input type="submit" class="btn btn-danger" th:value="Delete"/>
+            </form>
         </div>
+    </div>
     </body>
 </html>

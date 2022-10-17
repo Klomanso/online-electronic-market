@@ -5,6 +5,9 @@
         <title>Edit Good Info</title>
         <link href="/css/common.css" rel="stylesheet">
         <link rel="stylesheet" href="/css/navbar.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+              crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     </head>
     <body>
@@ -26,36 +29,35 @@
 
     <div class="page-content">
             <div id="good-edit">
-                <form method="POST" action="/good-save">
-                    <input type="hidden" name="good-id" th:value="${good.id}">
+                <form method="POST" th:action="${add} ? @{/good/add} : @{/good/save/{id}(id=${good.id})}" th:object="${good}">
 
                     <label for="good-name">Name:</label>
-                    <input id="good-name" type="text" name="good-name" required th:value="${good.name}">
+                    <input id="good-name" type="text" name="good-name" required th:field="*{name}">
                     <br>
                     <br>
                     <label for="good-price">Price:</label>
-                    <input id="good-price" type="number" min="0.01" step="0.01" name="good-price" required th:value="${good.price}">
+                    <input id="good-price" type="number" min="0.01" step="0.01" name="good-price" required th:field="*{price}">
                     <br>
                     <br>
                     <label for="good-company">Company:</label>
-                    <input id="good-company" type="text" name="good-company" required th:value="${good.company}">
+                    <input id="good-company" type="text" name="good-company" required th:field="*{company}">
                     <br>
                     <br>
                     <label for="good-assembly-place">Made in:</label>
-                    <input id="good-assembly-place" type="text" name="good-assembly-place" required th:value="${good.assemblyPlace}">
+                    <input id="good-assembly-place" type="text" name="good-assembly-place" required th:field="*{assemblyPlace}">
                     <br>
                     <br>
                     <label for="good-quantity">Quantity:</label>
-                    <input id="good-quantity" type="number" min="0" name="good-quantity" required th:value="${good.quantity}">
+                    <input id="good-quantity" type="number" min="0" name="good-quantity" required th:field="*{quantity}">
                     <br>
                     <br>
                     <label for="good-description">Description:</label>
-                    <input id="good-description" type="text" name="good-description" th:value="${good.description}">
+                    <input id="good-description" type="text" name="good-description" th:field="*{description}">
                     <br>
                     <br>
                     <label for="good-type">Type:</label>
                     <br>
-                    <select id="good-type" name="good-type-id" size="4" required>
+                    <select id="good-type" th:field="*{appType}" name="good-type-id" size="4" required>
                         <option th:each="type : ${types}"
                                 th:value="${type.id}"
                                 th:text="${type.name}">
@@ -63,7 +65,7 @@
                     </select>
                     <br>
                     <br>
-                    <button id="save-good-button" class="btn" type="submit">
+                    <button id="save-good-button" class="btn btn-success" type="submit">
                         Save
                     </button>
                 </form>

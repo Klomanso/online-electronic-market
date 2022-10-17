@@ -49,6 +49,10 @@ public class Good implements Serializable {
         @Column(name = "good_assembly_place", length = 50)
         private String assemblyPlace;
 
+        public void setId(Long id) {
+                this.id = id;
+        }
+
         @Min(value = 0)
         @Max(value = 100000)
         @Column(name = "good_quantity", nullable = false)
