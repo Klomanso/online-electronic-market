@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
+
 
 @Controller
 public class GoodController {
@@ -103,7 +105,7 @@ public class GoodController {
         }
 
         @PostMapping(value = "/good/add")
-        public ModelAndView addGood(ModelAndView modelAndView, @ModelAttribute("good") Good good) {
+        public ModelAndView addGood(ModelAndView modelAndView, @Valid @ModelAttribute("good") Good good) {
                 Good newGood = goodService.save(good);
 
                 modelAndView.addObject("good", newGood);
@@ -113,7 +115,7 @@ public class GoodController {
         }
 
         @PostMapping("/good/save/{id}")
-        public ModelAndView saveGoodInfo(@ModelAttribute("good") Good good, @PathVariable("id") Long id, ModelAndView modelAndView) {
+        public ModelAndView saveGoodInfo(@Valid @ModelAttribute("good") Good good, @PathVariable("id") Long id, ModelAndView modelAndView) {
                 good.setId(id);
                 goodService.update(good);
                 modelAndView.setViewName("redirect:/goodInfo/" + good.getId());

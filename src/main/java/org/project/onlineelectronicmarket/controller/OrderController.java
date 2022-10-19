@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 
@@ -17,10 +18,11 @@ import org.project.onlineelectronicmarket.service.StatusService;
 import org.project.onlineelectronicmarket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -36,7 +38,7 @@ public class OrderController {
 
         private final StatusService statusService;
 
-        private final HashMap<Good, Integer> basket = new HashMap<>();
+        private final HashMap<Good, Integer> cart = new HashMap<>();
 
         @Autowired
         public OrderController(GoodService goodService, OrderService orderService,
@@ -66,13 +68,21 @@ public class OrderController {
 
         @GetMapping("/order-add")
         public String addNewOrder() {
-                basket.clear();
+                cart.clear();
                 return "order/order-add";
         }
 
-        @GetMapping("/order-show-basket")
-        public ModelAndView showBasket(@RequestParam(name = "good-id") Long goodId,
-                                 @RequestParam(name = "item-number") Integer itemNumber, ModelAndView modelAndView) {
+        @GetMapping("/item-add")
+        public ModelAndView addNewItemToCart(ModelAndView modelAndView) {
+                List<Good> goods = goodService.findAll();
+                modelAndView.addObject("goods", goods);
+                modelAndView.setViewName("order/item-add");
+                return modelAndView;
+        }
+
+        @GetMapping("/order-show-cart")
+        public ModelAndView showCart(@RequestParam(name = "good-id") Long goodId,
+                                     @RequestParam(name = "item-number") Integer itemNumber, ModelAndView modelAndView) {
 
                 Optional<Good> foundGood = goodService.findById(goodId);
 
@@ -84,35 +94,27 @@ public class OrderController {
 
                 Good good = foundGood.get();
 
-                if (basket.containsKey(good)) {
-                        basket.put(good, basket.get(good) + itemNumber);
+                if (cart.containsKey(good)) {
+                        cart.put(good, cart.get(good) + itemNumber);
                 } else {
-                        basket.put(good, itemNumber);
+                        cart.put(good, itemNumber);
                 }
 
-                modelAndView.addObject("items", basket.keySet());
-                modelAndView.addObject("basket", basket);
-                modelAndView.setViewName("order/order-show-basket");
+                modelAndView.addObject("items", cart.keySet());
+                modelAndView.addObject("cart", cart);
+                modelAndView.setViewName("order/order-show-cart");
 
-                return modelAndView;
-        }
-
-        @GetMapping("/item-add")
-        public ModelAndView addNewItemToBasket(ModelAndView modelAndView) {
-                List<Good> goods = goodService.findAll();
-                modelAndView.addObject("goods", goods);
-                modelAndView.setViewName("order/item-add");
                 return modelAndView;
         }
 
         @GetMapping("/order-checkout")
         public ModelAndView selectUserAndDeliveryTerms(ModelAndView modelAndView) {
-                if (basket.isEmpty()) {
+                if (cart.isEmpty()) {
                         modelAndView.addObject("error", new ErrorMsg("You should select at least one item"));
                         modelAndView.setViewName("error/invalid-action");
                         return modelAndView;
                 }
-                modelAndView.addObject("basket", basket);
+                modelAndView.addObject("cart", cart);
                 List<User> users = userService.findAll();
                 modelAndView.addObject("users", users);
                 modelAndView.setViewName("order/order-checkout");
@@ -122,11 +124,11 @@ public class OrderController {
 
         @PostMapping("/order-save")
         public ModelAndView orderSave(@RequestParam(name = "order-user-id") Long userId,
-                                @Valid @RequestParam(name = "order-delivery-address") String deliveryAddress,
-                                @RequestParam(name = "order-deliver-on", required = false)
-                                @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                LocalDate deliverOn,
-                                ModelAndView modelAndView) {
+                                      @Valid @RequestParam(name = "order-delivery-address") String deliveryAddress,
+                                      @RequestParam(name = "order-deliver-on", required = false)
+                                      @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                      LocalDate deliverOn,
+                                      ModelAndView modelAndView) {
 
                 LocalDateTime now = trimToMinutes(LocalDateTime.now());
 
@@ -144,7 +146,7 @@ public class OrderController {
                 Order order = new Order(now, statusService.processing(),
                         deliveryAddress, deliverOn, user);
 
-                for (Entry<Good, Integer> pair : basket.entrySet()) {
+                for (Entry<Good, Integer> pair : cart.entrySet()) {
                         Good good = pair.getKey();
                         Integer number = pair.getValue();
                         if (good.getQuantity() < number) {
@@ -178,11 +180,7 @@ public class OrderController {
                         modelAndView.setViewName("error/invalid-action");
                 } else {
                         Order order = foundOrder.get();
-                        if (order.getStatus().equals(statusService.processing())) {
-                                order.setStatus(statusService.complete());
-                        } else if (order.getStatus().equals(statusService.complete())) {
-                                order.setStatus(statusService.delivered());
-                        } else {
+                        if (!orderService.setOrderStatus(order)) {
                                 modelAndView.addObject("error", new ErrorMsg("Order is already delivered"));
                                 modelAndView.setViewName("error/invalid-action");
                                 return modelAndView;
@@ -209,12 +207,7 @@ public class OrderController {
                         modelAndView.addObject("order", order);
                         modelAndView.addObject("items", order.getGoodItems());
 
-                        double totalPrice = 0.0;
-                        List<OrderGood> items = order.getGoodItems();
-                        for (OrderGood item : items) {
-                                totalPrice += item.getQuantity() * item.getGood().getPrice();
-                        }
-                        modelAndView.addObject("total", totalPrice);
+                        modelAndView.addObject("total", orderService.getTotalPrice(order));
                         modelAndView.setViewName("order/order-info");
 
                 } else {

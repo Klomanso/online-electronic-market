@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
+
 
 @Controller
 public class UserController {
@@ -73,7 +75,7 @@ public class UserController {
         }
 
         @PostMapping(value = "/user/add")
-        public ModelAndView addUser(ModelAndView modelAndView, @ModelAttribute("user") User user) {
+        public ModelAndView addUser(ModelAndView modelAndView, @Valid @ModelAttribute("user") User user) {
                 User newUser = userService.save(user);
 
                 modelAndView.addObject("user", newUser);
@@ -83,7 +85,7 @@ public class UserController {
         }
 
         @PostMapping("/user/save/{id}")
-        public ModelAndView saveUserInfo(@ModelAttribute("user") User user, @PathVariable("id") Long id, ModelAndView modelAndView) {
+        public ModelAndView saveUserInfo(@Valid @ModelAttribute("user") User user, @PathVariable("id") Long id, ModelAndView modelAndView) {
                 user.setId(id);
                 userService.update(user);
                 modelAndView.setViewName("redirect:/userInfo/" + user.getId());

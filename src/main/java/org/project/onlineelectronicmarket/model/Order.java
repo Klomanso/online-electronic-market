@@ -50,6 +50,7 @@ public class Order implements Serializable {
         private String deliveryAddress;
 
         @Column(name = "order_deliver_on")
+        @FutureOrPresent
         private LocalDate deliverOn;
 
         @ManyToOne()
