@@ -33,7 +33,7 @@ public class User implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Size(min = 1, max = 70, message = "size range: [1-70] symbols")
+        @Size(min = 1, max = 5, message = "size range: [1-70] symbols")
         @NotBlank(message = "Name is required")
         @Column(name = "user_name", nullable = false, length = 70)
         private String name;

@@ -9,6 +9,7 @@ import org.project.onlineelectronicmarket.service.impl.AppTypeServiceImpl;
 import org.project.onlineelectronicmarket.service.impl.GoodServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -106,20 +107,35 @@ public class GoodController {
         }
 
         @PostMapping(value = "/good/add")
-        public ModelAndView addGood(ModelAndView modelAndView, @Valid @ModelAttribute("good") Good good) {
-                Good newGood = goodServiceImpl.save(good);
+        public ModelAndView addGood(ModelAndView modelAndView, @Valid @ModelAttribute("good") Good good,
+                                    BindingResult result) {
 
-                modelAndView.addObject("good", newGood);
-                modelAndView.setViewName("redirect:/goodInfo/" + newGood.getId());
+                if(result.hasErrors()) {
+                        List<AppType> appTypes = appTypeServiceImpl.findAllByOrderByName();
+                        modelAndView.addObject("types", appTypes);
+                        modelAndView.addObject("add", true);
+                        modelAndView.setViewName("good/goodEdit");
+                } else {
+                        Good newGood = goodServiceImpl.save(good);
+                        modelAndView.addObject("good", newGood);
+                        modelAndView.setViewName("redirect:/goodInfo/" + newGood.getId());
+                }
 
                 return modelAndView;
         }
 
         @PostMapping("/good/save/{id}")
-        public ModelAndView saveGoodInfo(@Valid @ModelAttribute("good") Good good, @PathVariable("id") Long id, ModelAndView modelAndView) {
-                good.setId(id);
-                goodServiceImpl.update(good);
-                modelAndView.setViewName("redirect:/goodInfo/" + good.getId());
+        public ModelAndView saveGoodInfo(@Valid @ModelAttribute("good") Good good, @PathVariable("id") Long id,
+                                         ModelAndView modelAndView, BindingResult result) {
+
+                if (result.hasErrors()) {
+                        modelAndView.addObject("add", false);
+                        modelAndView.setViewName("good/goodEdit");
+                } else {
+                        good.setId(id);
+                        goodServiceImpl.update(good);
+                        modelAndView.setViewName("redirect:/goodInfo/" + good.getId());
+                }
 
                 return modelAndView;
         }

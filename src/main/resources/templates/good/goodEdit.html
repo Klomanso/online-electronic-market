@@ -31,34 +31,81 @@
             <div id="good-edit">
                 <form method="POST" th:action="${add} ? @{/good/add} : @{/good/save/{id}(id=${good.id})}" th:object="${good}">
 
+                    <div class="form-group">
+                        <label for="fullName">Name</label>
+                        <input class="form-control" type="text" th:field="*{name}" id="fullName" placeholder="Full Name">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+<!--
                     <label for="good-name">Name:</label>
                     <input id="good-name" type="text" name="good-name" required th:field="*{name}">
                     <br>
                     <br>
+-->
+                    <div class="form-group">
+                        <label for="good-price">Price</label>
+                        <input class="form-control" type="number" min="0.01" step="0.01" th:field="*{price}"
+                               id="good-price" placeholder="price" required>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                    </div>
+<!--
                     <label for="good-price">Price:</label>
                     <input id="good-price" type="number" min="0.01" step="0.01" name="good-price" required th:field="*{price}">
                     <br>
                     <br>
+-->
+                    <div class="form-group">
+                        <label for="good-company">Company</label>
+                        <input class="form-control" type="text" th:field="*{company}" id="good-company" placeholder="company">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('company')}" th:errors="*{company}"></div>
+                    </div>
+<!--
                     <label for="good-company">Company:</label>
                     <input id="good-company" type="text" name="good-company" required th:field="*{company}">
                     <br>
                     <br>
+-->
+                    <div class="form-group">
+                        <label for="good-assembly-place">Made in</label>
+                        <input class="form-control" type="text" th:field="*{assemblyPlace}" id="good-assembly-place"
+                               placeholder="assembly-place">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('assemblyPlace')}" th:errors="*{assemblyPlace}"></div>
+                    </div>
+<!--
                     <label for="good-assembly-place">Made in:</label>
                     <input id="good-assembly-place" type="text" name="good-assembly-place" required th:field="*{assemblyPlace}">
                     <br>
                     <br>
+-->
+                    <div class="form-group">
+                        <label for="good-quantity">Quantity</label>
+                        <input class="form-control" type="number" min="0" th:field="*{quantity}"
+                               id="good-quantity" placeholder="quantity" required>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+<!--
+                    </div>
                     <label for="good-quantity">Quantity:</label>
                     <input id="good-quantity" type="number" min="0" name="good-quantity" required th:field="*{quantity}">
                     <br>
                     <br>
+-->
+                        <div class="form-group">
+                            <label for="good-description">Description</label>
+                            <input class="form-control" type="text" th:field="*{description}" id="good-description"
+                                   placeholder="description">
+                            <div class="alert alert-warning" th:if="${#fields.hasErrors('description')}"
+                                 th:errors="*{description}"></div>
+                        </div>
+<!--
                     <label for="good-description">Description:</label>
                     <input id="good-description" type="text" name="good-description" th:field="*{description}">
                     <br>
                     <br>
+-->
                     <label for="good-type">Type:</label>
                     <br>
-                    <select id="good-type" th:field="*{appType}" name="good-type-id" size="4" required>
-                        <option th:each="type : ${types}"
+                    <select class="form-select" id="good-type" th:field="*{appType}" name="good-type-id" size="4" required>
+                        <option class="o" th:each="type : ${types}"
                                 th:value="${type.id}"
                                 th:text="${type.name}">
                         </option>

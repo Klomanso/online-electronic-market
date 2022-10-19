@@ -8,6 +8,7 @@ import org.project.onlineelectronicmarket.model.User;
 import org.project.onlineelectronicmarket.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -77,20 +78,33 @@ public class UserController {
         }
 
         @PostMapping(value = "/user/add")
-        public ModelAndView addUser(ModelAndView modelAndView, @Valid @ModelAttribute("user") User user) {
-                User newUser = userServiceImpl.save(user);
+        public ModelAndView addUser(ModelAndView modelAndView, @Valid @ModelAttribute("user") User user,
+                                    BindingResult result) {
 
-                modelAndView.addObject("user", newUser);
-                modelAndView.setViewName("redirect:/userInfo/" + newUser.getId());
+                if (result.hasErrors()) {
+                        modelAndView.addObject("add", true);
+                        modelAndView.setViewName("user/userEdit");
+                } else {
+                        User newUser = userServiceImpl.save(user);
+                        modelAndView.addObject("user", newUser);
+                        modelAndView.setViewName("redirect:/userInfo/" + newUser.getId());
+                }
 
                 return modelAndView;
         }
 
         @PostMapping("/user/save/{id}")
-        public ModelAndView saveUserInfo(@Valid @ModelAttribute("user") User user, @PathVariable("id") Long id, ModelAndView modelAndView) {
-                user.setId(id);
-                userServiceImpl.update(user);
-                modelAndView.setViewName("redirect:/userInfo/" + user.getId());
+        public ModelAndView saveUserInfo(@Valid @ModelAttribute("user") User user, @PathVariable("id") Long id,
+                                         ModelAndView modelAndView, BindingResult result) {
+
+                if (result.hasErrors()) {
+                        modelAndView.addObject("add", false);
+                        modelAndView.setViewName("user/userEdit");
+                } else {
+                        user.setId(id);
+                        userServiceImpl.update(user);
+                        modelAndView.setViewName("redirect:/userInfo/" + user.getId());
+                }
 
                 return modelAndView;
         }
