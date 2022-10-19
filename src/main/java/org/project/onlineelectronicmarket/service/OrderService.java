@@ -3,10 +3,16 @@ package org.project.onlineelectronicmarket.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.project.onlineelectronicmarket.model.Good;
 import org.project.onlineelectronicmarket.model.Order;
 import org.project.onlineelectronicmarket.model.OrderGood;
 import org.project.onlineelectronicmarket.repository.OrderRepository;
+import org.project.onlineelectronicmarket.util.pagination.Paged;
+import org.project.onlineelectronicmarket.util.pagination.Paging;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +76,11 @@ public class OrderService {
 
         public List<Order> findAllByOrderByOrderedAtDesc() {
                 return orderRepository.findAllByOrderByOrderedAtDesc();
+        }
+
+        public Paged<Order> getPage(int pageNumber, int size) {
+                PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.Direction.ASC, "id");
+                Page<Order> orderPage = orderRepository.findAll(request);
+                return new Paged<>(orderPage, Paging.of(orderPage.getTotalPages(), pageNumber, size));
         }
 }

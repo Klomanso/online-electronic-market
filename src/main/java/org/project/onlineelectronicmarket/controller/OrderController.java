@@ -59,9 +59,11 @@ public class OrderController {
         }
 
         @GetMapping("/orders")
-        public ModelAndView getOrders(ModelAndView modelAndView) {
-                List<Order> orders = orderService.findAllByOrderByOrderedAtDesc();
-                modelAndView.addObject("orders", orders);
+        public ModelAndView getGoods(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+                                     ModelAndView modelAndView) {
+
+                modelAndView.addObject("orders", orderService.getPage(pageNumber, size));
                 modelAndView.setViewName("order/orders");
                 return modelAndView;
         }

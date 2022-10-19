@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.project.onlineelectronicmarket.model.AppType;
 import org.project.onlineelectronicmarket.model.Good;
-import org.project.onlineelectronicmarket.model.User;
 import org.project.onlineelectronicmarket.service.AppTypeService;
 import org.project.onlineelectronicmarket.service.GoodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,11 @@ public class GoodController {
         }
 
         @GetMapping("/goods")
-        public ModelAndView getGoods(ModelAndView modelAndView) {
-                List<Good> goods = goodService.findAllByOrderByName();
-                modelAndView.addObject("goods", goods);
+        public ModelAndView getGoods(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+                                     ModelAndView modelAndView) {
+
+                modelAndView.addObject("goods", goodService.getPage(pageNumber, size));
                 modelAndView.setViewName("good/goods");
                 return modelAndView;
         }

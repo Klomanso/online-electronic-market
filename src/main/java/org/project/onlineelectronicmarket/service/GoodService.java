@@ -8,8 +8,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.project.onlineelectronicmarket.model.Good;
+import org.project.onlineelectronicmarket.model.User;
 import org.project.onlineelectronicmarket.repository.GoodRepository;
+import org.project.onlineelectronicmarket.util.pagination.Paged;
+import org.project.onlineelectronicmarket.util.pagination.Paging;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
@@ -79,5 +85,11 @@ public class GoodService {
                 return Stream.of( this.findByNameContaining(query), this.findByCompanyContaining(query),
                                 this.findByAssemblyPlaceContaining(query), this.findByDescriptionContaining(query) )
                         .flatMap(Collection::stream).collect(Collectors.toSet());
+        }
+
+        public Paged<Good> getPage(int pageNumber, int size) {
+                PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.Direction.ASC, "id");
+                Page<Good> goodPage = goodRepository.findAll(request);
+                return new Paged<>(goodPage, Paging.of(goodPage.getTotalPages(), pageNumber, size));
         }
 }

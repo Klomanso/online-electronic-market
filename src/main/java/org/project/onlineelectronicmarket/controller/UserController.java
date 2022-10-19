@@ -24,9 +24,11 @@ public class UserController {
         }
 
         @GetMapping("/users")
-        public ModelAndView getUsers(ModelAndView modelAndView) {
-                List<User> users = userService.findAllByOrderByName();
-                modelAndView.addObject("users", users);
+        public ModelAndView getUsers(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+                                     ModelAndView modelAndView) {
+
+                modelAndView.addObject("users", userService.getPage(pageNumber, size));
                 modelAndView.setViewName("user/users");
                 return modelAndView;
         }
