@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.project.onlineelectronicmarket.model.Order;
 import org.project.onlineelectronicmarket.model.User;
-import org.project.onlineelectronicmarket.service.UserService;
+import org.project.onlineelectronicmarket.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +16,11 @@ import javax.validation.Valid;
 
 @Controller
 public class UserController {
-        private final UserService userService;
+        private final UserServiceImpl userServiceImpl;
 
         @Autowired
-        public UserController(UserService userService) {
-                this.userService = userService;
+        public UserController(UserServiceImpl userServiceImpl) {
+                this.userServiceImpl = userServiceImpl;
         }
 
         @GetMapping("/users")
@@ -28,18 +28,18 @@ public class UserController {
                                      @RequestParam(value = "size", required = false, defaultValue = "5") int size,
                                      ModelAndView modelAndView) {
 
-                modelAndView.addObject("users", userService.getPage(pageNumber, size));
+                modelAndView.addObject("users", userServiceImpl.getPage(pageNumber, size));
                 modelAndView.setViewName("user/users");
                 return modelAndView;
         }
 
         @GetMapping("/userInfo/{id}")
         public ModelAndView getUserInfo(@PathVariable("id") Long id, ModelAndView modelAndView) {
-                Optional<User> foundUser = userService.findById(id);
+                Optional<User> foundUser = userServiceImpl.findById(id);
 
                 if (foundUser.isPresent()) {
                         User user = foundUser.get();
-                        List<Order> orders = userService.findUserOrdersById(id);
+                        List<Order> orders = userServiceImpl.findUserOrdersById(id);
 
                         modelAndView.addObject("user", user);
                         modelAndView.addObject("orders", orders);
@@ -53,7 +53,7 @@ public class UserController {
 
         @GetMapping("/userEdit/{id}")
         public ModelAndView editUserInfo(@PathVariable("id") Long id, ModelAndView modelAndView) {
-                Optional<User> foundUser = userService.findById(id);
+                Optional<User> foundUser = userServiceImpl.findById(id);
 
                 if (foundUser.isEmpty()) {
                         modelAndView.addObject("error", new ErrorMsg("There is no user with id=" + id));
@@ -78,7 +78,7 @@ public class UserController {
 
         @PostMapping(value = "/user/add")
         public ModelAndView addUser(ModelAndView modelAndView, @Valid @ModelAttribute("user") User user) {
-                User newUser = userService.save(user);
+                User newUser = userServiceImpl.save(user);
 
                 modelAndView.addObject("user", newUser);
                 modelAndView.setViewName("redirect:/userInfo/" + newUser.getId());
@@ -89,7 +89,7 @@ public class UserController {
         @PostMapping("/user/save/{id}")
         public ModelAndView saveUserInfo(@Valid @ModelAttribute("user") User user, @PathVariable("id") Long id, ModelAndView modelAndView) {
                 user.setId(id);
-                userService.update(user);
+                userServiceImpl.update(user);
                 modelAndView.setViewName("redirect:/userInfo/" + user.getId());
 
                 return modelAndView;
@@ -98,13 +98,13 @@ public class UserController {
 
         @PostMapping("/user/delete/{id}")
         public ModelAndView delete(@PathVariable("id") Long id, ModelAndView modelAndView) {
-                Optional<User> foundUser = userService.findById(id);
+                Optional<User> foundUser = userServiceImpl.findById(id);
 
                 if (foundUser.isEmpty()) {
                         modelAndView.addObject("error", new ErrorMsg("There is no user with id=" + id));
                         modelAndView.setViewName("error/invalid-action");
                 } else {
-                        userService.delete(foundUser.get());
+                        userServiceImpl.delete(foundUser.get());
                         modelAndView.setViewName("redirect:/users");
                 }
 

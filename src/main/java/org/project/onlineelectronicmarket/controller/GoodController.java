@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.project.onlineelectronicmarket.model.AppType;
 import org.project.onlineelectronicmarket.model.Good;
-import org.project.onlineelectronicmarket.service.AppTypeService;
-import org.project.onlineelectronicmarket.service.GoodService;
+import org.project.onlineelectronicmarket.service.impl.AppTypeServiceImpl;
+import org.project.onlineelectronicmarket.service.impl.GoodServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,13 @@ import javax.validation.Valid;
 @Controller
 public class GoodController {
 
-        private final GoodService goodService;
-        private final AppTypeService appTypeService;
+        private final GoodServiceImpl goodServiceImpl;
+        private final AppTypeServiceImpl appTypeServiceImpl;
 
         @Autowired
-        public GoodController(GoodService goodService, AppTypeService appTypeService) {
-                this.goodService = goodService;
-                this.appTypeService = appTypeService;
+        public GoodController(GoodServiceImpl goodServiceImpl, AppTypeServiceImpl appTypeServiceImpl) {
+                this.goodServiceImpl = goodServiceImpl;
+                this.appTypeServiceImpl = appTypeServiceImpl;
         }
 
         @GetMapping("/goods")
@@ -32,14 +32,14 @@ public class GoodController {
                                      @RequestParam(value = "size", required = false, defaultValue = "5") int size,
                                      ModelAndView modelAndView) {
 
-                modelAndView.addObject("goods", goodService.getPage(pageNumber, size));
+                modelAndView.addObject("goods", goodServiceImpl.getPage(pageNumber, size));
                 modelAndView.setViewName("good/goods");
                 return modelAndView;
         }
 
         @GetMapping("/goodsFound")
         public ModelAndView getGoodsByQuery(@RequestParam(name = "good-query") String query, ModelAndView modelAndView) {
-                modelAndView.addObject("goods", goodService.findAllMatches(query));
+                modelAndView.addObject("goods", goodServiceImpl.findAllMatches(query));
                 modelAndView.addObject("query", new ErrorMsg(query));
                 modelAndView.setViewName("good/goodsFound");
                 return modelAndView;
@@ -48,7 +48,7 @@ public class GoodController {
         @GetMapping("/goodInfo/{id}")
         public ModelAndView getGoodInfo(@PathVariable("id") Long id, ModelAndView modelAndView) {
 
-                Optional<Good> foundGood = goodService.findById(id);
+                Optional<Good> foundGood = goodServiceImpl.findById(id);
 
                 if(foundGood.isPresent()) {
                         modelAndView.addObject("good", foundGood.get());
@@ -68,14 +68,14 @@ public class GoodController {
 
         @GetMapping("/goodEdit/{id}")
         public ModelAndView editGoodInfo(@PathVariable("id") Long id, ModelAndView modelAndView) {
-                List<AppType> appTypes = appTypeService.findAllByOrderByName();
+                List<AppType> appTypes = appTypeServiceImpl.findAllByOrderByName();
 
                 if (id == null) {
                         modelAndView.addObject("good", new Good());
                         modelAndView.addObject("types", appTypes);
                         modelAndView.setViewName("good/goodEdit");
                 } else {
-                        Optional<Good> foundGood = goodService.findById(id);
+                        Optional<Good> foundGood = goodServiceImpl.findById(id);
                         if (foundGood.isEmpty()) {
                                 modelAndView.addObject("error", new ErrorMsg("There is no good with id=" + id));
                                 modelAndView.setViewName("error/invalid-action");
@@ -95,7 +95,7 @@ public class GoodController {
 
         @GetMapping("/good/add")
         public ModelAndView showAddGood(ModelAndView modelAndView) {
-                List<AppType> appTypes = appTypeService.findAllByOrderByName();
+                List<AppType> appTypes = appTypeServiceImpl.findAllByOrderByName();
 
                 modelAndView.addObject("add", true);
                 modelAndView.addObject("types", appTypes);
@@ -107,7 +107,7 @@ public class GoodController {
 
         @PostMapping(value = "/good/add")
         public ModelAndView addGood(ModelAndView modelAndView, @Valid @ModelAttribute("good") Good good) {
-                Good newGood = goodService.save(good);
+                Good newGood = goodServiceImpl.save(good);
 
                 modelAndView.addObject("good", newGood);
                 modelAndView.setViewName("redirect:/goodInfo/" + newGood.getId());
@@ -118,7 +118,7 @@ public class GoodController {
         @PostMapping("/good/save/{id}")
         public ModelAndView saveGoodInfo(@Valid @ModelAttribute("good") Good good, @PathVariable("id") Long id, ModelAndView modelAndView) {
                 good.setId(id);
-                goodService.update(good);
+                goodServiceImpl.update(good);
                 modelAndView.setViewName("redirect:/goodInfo/" + good.getId());
 
                 return modelAndView;
@@ -127,20 +127,20 @@ public class GoodController {
 
         @PostMapping("/good/delete/{id}")
         public ModelAndView deleteGood(@PathVariable("id") Long id, ModelAndView modelAndView) {
-                Optional<Good> foundGood = goodService.findById(id);
+                Optional<Good> foundGood = goodServiceImpl.findById(id);
                 if (foundGood.isEmpty()) {
                         modelAndView.addObject("error", new ErrorMsg("There is no good with id=" + id));
                         modelAndView.setViewName("error/invalid-action");
                 } else {
                         Good good = foundGood.get();
-                        if (goodService.hasOrderEntries(good)) {
+                        if (goodServiceImpl.hasOrderEntries(good)) {
                                 modelAndView.addObject("error",
                                         new ErrorMsg("Cannot delete item ["
                                                 + good.getName()
                                                 + "]. There are orders containing it."));
                                 modelAndView.setViewName("error/invalid-action");
                         } else {
-                                goodService.delete(foundGood.get());
+                                goodServiceImpl.delete(foundGood.get());
                                 modelAndView.setViewName("redirect:/goods");
                         }
                 }

@@ -1,69 +1,25 @@
 package org.project.onlineelectronicmarket.service;
 
+import org.project.onlineelectronicmarket.model.Order;
+import org.project.onlineelectronicmarket.model.User;
+
 import java.util.List;
 import java.util.Optional;
 
-import org.project.onlineelectronicmarket.model.Order;
-import org.project.onlineelectronicmarket.model.User;
-import org.project.onlineelectronicmarket.repository.UserRepository;
-import org.project.onlineelectronicmarket.util.pagination.Paged;
-import org.project.onlineelectronicmarket.util.pagination.Paging;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Service;
+public interface UserService {
 
-@Service
-public class UserService {
+        User save(User user);
 
-        private final UserRepository userRepository;
+        void delete(User user);
 
-        @Autowired
-        public UserService(UserRepository userRepository) {
-                this.userRepository = userRepository;
-        }
+        Optional<User> update(User newUser);
 
-        public User save(User user) {
-                return userRepository.save(user);
-        }
+        Optional<User> findById(Long id);
 
-        public void delete(User user) {
-                userRepository.delete(user);
-        }
+        List<User> findAll();
 
-        @Modifying
-        public Optional<User> update(User newUser) {
-                Optional<User> oldUser = findById(newUser.getId());
+        List<User> findAllByOrderByName();
 
-                if (oldUser.isPresent()) {
-                        User savedUser = save(newUser);
-                        return Optional.of(savedUser);
-                } else {
-                        return oldUser;
-                }
-        }
+        List<Order> findUserOrdersById(Long id);
 
-        public Optional<User> findById(Long id) {
-                return userRepository.findById(id);
-        }
-
-        public List<User> findAll() {
-                return userRepository.findAll();
-        }
-
-        public List<User> findAllByOrderByName() {
-                return userRepository.findAllByOrderByName();
-        }
-
-        public List<Order> findUserOrdersById(Long id) {
-                return userRepository.findUserOrdersById(id);
-        }
-
-        public Paged<User> getPage(int pageNumber, int size) {
-                PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.Direction.ASC, "id");
-                Page<User> usersPage = userRepository.findAll(request);
-                return new Paged<>(usersPage, Paging.of(usersPage.getTotalPages(), pageNumber, size));
-        }
 }
