@@ -12,7 +12,7 @@
     </head>
     <body>
     <nav>
-        <label id="user-name1" th:text="'Goods found by query ' + ${query.message}">name</label>
+        <label id="user-name1" th:text="'Goods found by query |' + ${query.message} + '|'">name</label>
         <ul>
 
             <li><a id="home-link" href="/">Home</a></li>
