@@ -35,7 +35,7 @@ public class Good implements Serializable {
         private String name;
 
         @Min(value = 0)
-        @Max(value = 1_000_000)
+        @Max(value = 100_000)
         @Column(name = "good_price", nullable = false)
         private Double price;
 
@@ -54,7 +54,7 @@ public class Good implements Serializable {
         }
 
         @Min(value = 0)
-        @Max(value = 100000)
+        @Max(value = 100_000)
         @Column(name = "good_quantity", nullable = false)
         private Integer quantity = 0;
 

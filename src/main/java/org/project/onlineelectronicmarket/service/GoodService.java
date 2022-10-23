@@ -29,4 +29,9 @@ public interface GoodService {
 
         boolean hasOrderEntries(Good param);
 
+        List<Good> findAllByPriceBetween(Double from, Double to);
+
+        List<Good> findAllByQuantityBetween(Integer from, Integer to);
+
+        List<Good> findAllByAppTypeName(String appType_name);
 }

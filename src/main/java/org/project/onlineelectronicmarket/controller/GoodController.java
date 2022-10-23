@@ -1,6 +1,8 @@
 package org.project.onlineelectronicmarket.controller;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.project.onlineelectronicmarket.model.AppType;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 
@@ -29,10 +32,11 @@ public class GoodController {
         }
 
         @GetMapping("/goods")
-        public ModelAndView getGoods(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
+        public ModelAndView getGoods(@RequestParam(value = "pageNumber",required = false, defaultValue = "1") int pageNumber,
                                      @RequestParam(value = "size", required = false, defaultValue = "5") int size,
                                      ModelAndView modelAndView) {
 
+                modelAndView.addObject("types", appTypeServiceImpl.findAllByOrderByName());
                 modelAndView.addObject("goods", goodServiceImpl.getPage(pageNumber, size));
                 modelAndView.setViewName("good/goods");
                 return modelAndView;
@@ -43,6 +47,14 @@ public class GoodController {
                 modelAndView.addObject("goods", goodServiceImpl.findAllMatches(query));
                 modelAndView.addObject("query", new ErrorMsg(query));
                 modelAndView.setViewName("good/goodsFound");
+                return modelAndView;
+        }
+
+        @GetMapping("/goodsFilter")
+        public ModelAndView getGoodsByFilter(HttpServletRequest request, ModelAndView modelAndView) {
+                Map<String, String[]> params = request.getParameterMap();
+                params.forEach((K,V) -> System.out.println(K + " " + Arrays.toString(V)));
+                modelAndView.setViewName("good/goodsFilter");
                 return modelAndView;
         }
 
@@ -78,7 +90,8 @@ public class GoodController {
                 } else {
                         Optional<Good> foundGood = goodServiceImpl.findById(id);
                         if (foundGood.isEmpty()) {
-                                modelAndView.addObject("error", new ErrorMsg("There is no good with id=" + id));
+                                modelAndView.addObject("error",
+                                        new ErrorMsg("There is no good with id=" + id));
                                 modelAndView.setViewName("error/invalid-action");
                         } else {
                                 Good good = foundGood.get();
