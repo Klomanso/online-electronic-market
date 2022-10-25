@@ -1,7 +1,7 @@
 const rangeInputQ = document.querySelectorAll(".range-input-q input"),
     quantityInput = document.querySelectorAll(".quantity-input input"),
     rangeQ = document.querySelector(".sliderq .progressq");
-let quantityGap = 1000;
+let quantityGap = 100;
 quantityInput.forEach(input =>{
     input.addEventListener("input", e =>{
         let minPrice = parseInt(quantityInput[0].value),

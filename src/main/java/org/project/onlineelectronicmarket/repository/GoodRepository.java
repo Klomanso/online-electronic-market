@@ -5,6 +5,7 @@ import java.util.List;
 import org.project.onlineelectronicmarket.model.AppType;
 import org.project.onlineelectronicmarket.model.Good;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 
-public interface GoodRepository extends JpaRepository<Good, Long> {
+public interface GoodRepository extends JpaRepository<Good, Long>, JpaSpecificationExecutor<Good> {
         List<Good> findAllByOrderByName();
 
         List<Good> findByNameContainingIgnoreCase(String part);

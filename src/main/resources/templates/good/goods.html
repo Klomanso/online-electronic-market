@@ -68,7 +68,7 @@
         <br>
         <select multiple class="form-select" id="good-type" name="goodType" size="4">
             <option class="o" th:each="type : ${types}"
-                    th:value="${type.id}"
+                    th:value="${type.name}"
                     th:text="${type.name}">
             </option>
         </select>
@@ -81,20 +81,20 @@
             <div class="quantity-input">
                 <div class="field">
                     <span>Min</span>
-                    <input name="minQuantity" type="number" class="input-min-q" value="25000">
+                    <input name="minQuantity" type="number" class="input-min-q" value="0">
                 </div>
                 <div class="separator">-</div>
                 <div class="field">
                     <span>Max</span>
-                    <input name="maxQuantity" type="number" class="input-max-q" value="75000">
+                    <input name="maxQuantity" type="number" class="input-max-q" value="1000">
                 </div>
             </div>
             <div class="sliderq">
                 <div class="progressq"></div>
             </div>
             <div class="range-input-q">
-                <input type="range" class="range-min-q" min="0" max="100000" value="25000" step="100">
-                <input type="range" class="range-max-q" min="0" max="100000" value="75000" step="100">
+                <input type="range" class="range-min-q" min="0" max="1000" value="0" step="10">
+                <input type="range" class="range-max-q" min="0" max="1000" value="1000" step="10">
             </div>
         </div>
         <script src="/js/double_slider_quantity.js"></script>
@@ -107,20 +107,20 @@
             <div class="price-input">
                 <div class="field">
                     <span>Min</span>
-                    <input name="minPrice" type="number" class="input-min" value="25000">
+                    <input name="minPrice" type="number" class="input-min" value="0">
                 </div>
                 <div class="separator">-</div>
                 <div class="field">
                     <span>Max</span>
-                    <input name="maxPrice" type="number" class="input-max" value="75000">
+                    <input name="maxPrice" type="number" class="input-max" value="10000">
                 </div>
             </div>
             <div class="slider">
                 <div class="progress"></div>
             </div>
             <div class="range-input">
-                <input type="range" class="range-min" min="0" max="100000" value="25000" step="1000">
-                <input type="range" class="range-max" min="0" max="100000" value="75000" step="1000">
+                <input type="range" class="range-min" min="0" max="10000" value="0" step="100">
+                <input type="range" class="range-max" min="0" max="10000" value="10000" step="100">
             </div>
         </div>
         <script src="/js/double_slider_price.js"></script>

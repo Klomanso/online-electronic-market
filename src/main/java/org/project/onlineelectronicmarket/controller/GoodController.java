@@ -1,8 +1,6 @@
 package org.project.onlineelectronicmarket.controller;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.project.onlineelectronicmarket.model.AppType;
@@ -32,8 +30,10 @@ public class GoodController {
         }
 
         @GetMapping("/goods")
-        public ModelAndView getGoods(@RequestParam(value = "pageNumber",required = false, defaultValue = "1") int pageNumber,
-                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+        public ModelAndView getGoods(@RequestParam(value = "pageNumber", required = false, defaultValue = "1")
+                                     int pageNumber,
+                                     @RequestParam(value = "size", required = false, defaultValue = "5")
+                                     int size,
                                      ModelAndView modelAndView) {
 
                 modelAndView.addObject("types", appTypeServiceImpl.findAllByOrderByName());
@@ -43,7 +43,8 @@ public class GoodController {
         }
 
         @GetMapping("/goodsFound")
-        public ModelAndView getGoodsByQuery(@RequestParam(name = "good-query") String query, ModelAndView modelAndView) {
+        public ModelAndView getGoodsByQuery(@RequestParam(name = "good-query") String query,
+                                            ModelAndView modelAndView) {
                 modelAndView.addObject("goods", goodServiceImpl.findAllMatches(query));
                 modelAndView.addObject("query", new ErrorMsg(query));
                 modelAndView.setViewName("good/goodsFound");
@@ -52,8 +53,7 @@ public class GoodController {
 
         @GetMapping("/goodsFilter")
         public ModelAndView getGoodsByFilter(HttpServletRequest request, ModelAndView modelAndView) {
-                Map<String, String[]> params = request.getParameterMap();
-                params.forEach((K,V) -> System.out.println(K + " " + Arrays.toString(V)));
+                modelAndView.addObject("goods", goodServiceImpl.findAllByFilter(request.getParameterMap()));
                 modelAndView.setViewName("good/goodsFilter");
                 return modelAndView;
         }
@@ -63,7 +63,7 @@ public class GoodController {
 
                 Optional<Good> foundGood = goodServiceImpl.findById(id);
 
-                if(foundGood.isPresent()) {
+                if (foundGood.isPresent()) {
                         modelAndView.addObject("good", foundGood.get());
                         modelAndView.setViewName("good/goodInfo");
                 } else {
@@ -73,11 +73,6 @@ public class GoodController {
 
                 return modelAndView;
         }
-        /*
-         * If given good id is null then adds new good.
-         * Otherwise, returns good info (to let then update it).
-         *
-         */
 
         @GetMapping("/goodEdit/{id}")
         public ModelAndView editGoodInfo(@PathVariable("id") Long id, ModelAndView modelAndView) {
@@ -102,10 +97,6 @@ public class GoodController {
                 }
                 return modelAndView;
         }
-        /*
-         * If given id is null then saves new good with given characteristics.
-         * Otherwise, updates good info.
-         */
 
         @GetMapping("/good/add")
         public ModelAndView showAddGood(ModelAndView modelAndView) {
@@ -123,7 +114,7 @@ public class GoodController {
         public ModelAndView addGood(ModelAndView modelAndView, @Valid @ModelAttribute("good") Good good,
                                     BindingResult result) {
 
-                if(result.hasErrors()) {
+                if (result.hasErrors()) {
                         List<AppType> appTypes = appTypeServiceImpl.findAllByOrderByName();
                         modelAndView.addObject("types", appTypes);
                         modelAndView.addObject("add", true);
