@@ -1,5 +1,6 @@
 package org.project.onlineelectronicmarket.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,8 @@ public class GoodController {
 
         @GetMapping("/goodsFilter")
         public ModelAndView getGoodsByFilter(HttpServletRequest request, ModelAndView modelAndView) {
-                modelAndView.addObject("goods", goodServiceImpl.findAllByFilter(request.getParameterMap()));
+                HashMap<String, String[]> filterParams = new HashMap<>(request.getParameterMap());
+                modelAndView.addObject("goods", goodServiceImpl.findAllByFilter(filterParams));
                 modelAndView.setViewName("good/goodsFilter");
                 return modelAndView;
         }

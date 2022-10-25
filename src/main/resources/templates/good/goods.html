@@ -61,17 +61,27 @@
         <label for="goodCompany">Company:</label>
         <input id="goodCompany" type="search" name="goodCompany" placeholder="product company">
         <label for="aPlace">Assemply Place:</label>
-        <input id="aPlace" type="search" name="aPlace" placeholder="product info">
+        <input id="aPlace" type="search" name="aPlace" placeholder="assembly place">
         <label for="description">Description:</label>
         <input id="description" type="search" name="description" placeholder="product description">
+
+        <div class="form-check form-switch" th:each="type : ${types}">
+            <input th:text="${type.name}" th:value="${type.name}" class="form-check-input" type="checkbox"
+                   role="switch" id="flexSwitchCheckChecked" name="goodType" checked>
+            <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+        </div>
+
+<!--
         <label for="good-type">Type:</label>
         <br>
-        <select multiple class="form-select" id="good-type" name="goodType" size="4">
-            <option class="o" th:each="type : ${types}"
+
+        <select multiple class="form-select" id="good-type" name="goodType" aria-label="Default select example">
+            <option selected class="o" th:each="type : ${types}"
                     th:value="${type.name}"
                     th:text="${type.name}">
             </option>
         </select>
+-->
 
         <div class="wrapper">
             <header>

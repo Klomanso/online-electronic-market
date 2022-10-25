@@ -109,7 +109,10 @@ public class GoodServiceImpl implements GoodService {
                 return new Paged<>(goodPage, Paging.of(goodPage.getTotalPages(), pageNumber, size));
         }
 
-        public List<Good> findAllByFilter(Map<String, String[]> params) {
+        public List<Good> findAllByFilter(HashMap<String, String[]> params) {
+                if (!params.containsKey("goodType")) {
+                        params.put("goodType", new String[]{});
+                }
                 return goodFilterRepository.getQueryResult(getFilters(params));
         }
 
@@ -154,21 +157,11 @@ public class GoodServiceImpl implements GoodService {
                         .value(Stream.of((params.get("maxQuantity"))).findFirst().orElse(""))
                         .operator(QueryOperator.LESS_THAN)
                         .build();
-
-                Filter appType;
-                if (params.containsKey("goodType")) {
-                        appType = Filter.builder()
+                Filter appType = Filter.builder()
                                 .field("appType")
                                 .values(Stream.of(params.get("goodType")).collect(Collectors.toList()))
                                 .operator(QueryOperator.IN)
                                 .build();
-                } else {
-                        appType = Filter.builder()
-                                .field("appType")
-                                .values(new ArrayList<>())
-                                .operator(QueryOperator.IN)
-                                .build();
-                }
 
                 List<Filter> filters = new ArrayList<>();
                 Collections.addAll(filters, name, company, assemblyPlace, description, appType,

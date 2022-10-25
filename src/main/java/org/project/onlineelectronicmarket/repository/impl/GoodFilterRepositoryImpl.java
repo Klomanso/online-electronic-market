@@ -1,21 +1,16 @@
 package org.project.onlineelectronicmarket.repository.impl;
 
-import org.project.onlineelectronicmarket.model.AppType;
 import org.project.onlineelectronicmarket.model.AppType_;
 import org.project.onlineelectronicmarket.model.Good;
 import org.project.onlineelectronicmarket.model.Good_;
-import org.project.onlineelectronicmarket.repository.AppTypeRepository;
 import org.project.onlineelectronicmarket.repository.GoodRepository;
 import org.project.onlineelectronicmarket.util.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.Join;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -23,12 +18,10 @@ import static org.springframework.data.jpa.domain.Specification.where;
 public class GoodFilterRepositoryImpl {
 
         private final GoodRepository goodRepository;
-        private final AppTypeRepository appTypeRepository;
 
         @Autowired
-        public GoodFilterRepositoryImpl(GoodRepository goodRepository, AppTypeRepository appTypeRepository) {
+        public GoodFilterRepositoryImpl(GoodRepository goodRepository) {
                 this.goodRepository = goodRepository;
-                this.appTypeRepository = appTypeRepository;
         }
 
         public List<Good> getQueryResult(List<Filter> filters) {
@@ -70,20 +63,11 @@ public class GoodFilterRepositoryImpl {
                                                 input.getValue()));
 
                         case LIKE -> (root, query, criteriaBuilder) ->
-                                criteriaBuilder.like(root.get(input.getField()), "%" + input.getValue() + "%");
+                                criteriaBuilder.like(criteriaBuilder.lower(root.get(input.getField())),
+                                        "%" + input.getValue().toLowerCase() + "%");
 
-
-                        case IN -> (root, query, criteriaBuilder) -> {
-                                Join<Good, AppType> goodAppTypeJoin = root.join(Good_.APP_TYPE);
-
-                                if (input.getValues().isEmpty()) {
-                                        List<String> types = appTypeRepository.findAll().stream().map(AppType::getName)
-                                                .toList();
-                                        return goodAppTypeJoin.get(AppType_.name).in(types);
-                                }
-
-                                return goodAppTypeJoin.get(AppType_.name).in(input.getValues());
-                        };
+                        case IN -> (root, query, criteriaBuilder) ->
+                                root.join(Good_.APP_TYPE).get(AppType_.NAME).in(input.getValues());
                 };
         }
 
@@ -107,7 +91,8 @@ public class GoodFilterRepositoryImpl {
         }
 
         private Specification<Good> nameLike(String name) {
-                return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(Good_.NAME), "%" + name + "%");
+                return (root, query, criteriaBuilder) ->
+                        criteriaBuilder.like(root.get(Good_.NAME), "%" + name + "%");
         }
 
 
