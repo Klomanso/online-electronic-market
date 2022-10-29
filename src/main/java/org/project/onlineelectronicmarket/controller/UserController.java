@@ -1,6 +1,7 @@
 package org.project.onlineelectronicmarket.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.project.onlineelectronicmarket.model.Order;
@@ -85,9 +86,17 @@ public class UserController {
                         modelAndView.addObject("add", true);
                         modelAndView.setViewName("user/userEdit");
                 } else {
-                        User newUser = userServiceImpl.save(user);
-                        modelAndView.addObject("user", newUser);
-                        modelAndView.setViewName("redirect:/userInfo/" + newUser.getId());
+                        if (userServiceImpl.existsByName(user.getName())) {
+                                modelAndView.addObject("existsByName", true);
+                                modelAndView.addObject("message",
+                                        "User with such name already exists");
+                                modelAndView.addObject("add", true);
+                                modelAndView.setViewName("user/userEdit");
+                        } else {
+                                User newUser = userServiceImpl.save(user);
+                                modelAndView.addObject("user", newUser);
+                                modelAndView.setViewName("redirect:/userInfo/" + newUser.getId());
+                        }
                 }
 
                 return modelAndView;
@@ -101,9 +110,18 @@ public class UserController {
                         modelAndView.addObject("add", false);
                         modelAndView.setViewName("user/userEdit");
                 } else {
-                        user.setId(id);
-                        userServiceImpl.update(user);
-                        modelAndView.setViewName("redirect:/userInfo/" + user.getId());
+                        if (userServiceImpl.existsByName(user.getName())
+                                && !Objects.equals(userServiceImpl.findById(id).get().getName(), user.getName())) {
+                                modelAndView.addObject("existsByName", true);
+                                modelAndView.addObject("message",
+                                        "User with such name already exists");
+                                modelAndView.addObject("add", false);
+                                modelAndView.setViewName("user/userEdit");
+                        } else {
+                                user.setId(id);
+                                userServiceImpl.update(user);
+                                modelAndView.setViewName("redirect:/userInfo/" + user.getId());
+                        }
                 }
 
                 return modelAndView;

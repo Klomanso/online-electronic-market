@@ -22,4 +22,6 @@ public interface UserService {
 
         List<Order> findUserOrdersById(Long id);
 
+        boolean existsByName(String name);
+
 }

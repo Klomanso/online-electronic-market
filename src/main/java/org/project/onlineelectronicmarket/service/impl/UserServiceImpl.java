@@ -62,6 +62,10 @@ public class UserServiceImpl implements UserService {
                 return userRepository.findUserOrdersById(id);
         }
 
+        public boolean existsByName(String name) {
+                return userRepository.existsByName(name);
+        }
+
         public Paged<User> getPage(int pageNumber, int size) {
                 PageRequest request = PageRequest.of(pageNumber - 1, size, Sort.Direction.ASC, "id");
                 Page<User> usersPage = userRepository.findAll(request);
