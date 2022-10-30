@@ -158,6 +158,9 @@
                             <span th:text="${good.name}"></span>
                         </a>
                     </td>
+                    <td>
+                        <img th:src="${good.image}" th:alt="${good.name}" width="50" height="50">
+                    </td>
                     <td th:text="${good.appType.name}"></td>
                     <td th:text="${good.price}"></td>
                     <td th:text="${good.quantity}"></td>
