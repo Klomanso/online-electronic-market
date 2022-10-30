@@ -63,12 +63,16 @@ public class Good implements Serializable {
         @Column(name = "good_description", length = 400)
         private String description;
 
+        @NotBlank(message = "image is required")
+        @Column(name = "image", length = 50)
+        private String image;
+
         public Good() {
         }
 
         public Good(AppType appType, String name, Double price,
                     String company, String assemblyPlace,
-                    Integer quantity, String description) {
+                    Integer quantity, String description, String image) {
                 this.appType = appType;
                 this.name = name;
                 this.price = price;
@@ -76,6 +80,7 @@ public class Good implements Serializable {
                 this.assemblyPlace = assemblyPlace;
                 this.quantity = quantity;
                 this.description = description;
+                this.image = image;
         }
 
         public Long getId() {
@@ -106,6 +111,13 @@ public class Good implements Serializable {
                 this.price = price;
         }
 
+        public String getImage() {
+                return image;
+        }
+
+        public void setImage(String image) {
+                this.image = image;
+        }
         public String getCompany() {
                 return company;
         }
