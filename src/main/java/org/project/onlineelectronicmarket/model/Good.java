@@ -63,7 +63,9 @@ public class Good implements Serializable {
         @Column(name = "good_description", length = 400)
         private String description;
 
+/*
         @NotBlank(message = "image is required")
+*/
         @Column(name = "image", length = 50)
         private String image;
 

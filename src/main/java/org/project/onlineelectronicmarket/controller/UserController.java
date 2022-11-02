@@ -27,7 +27,7 @@ public class UserController {
 
         @GetMapping("/users")
         public ModelAndView getUsers(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+                                     @RequestParam(value = "size", required = false, defaultValue = "1") int size,
                                      ModelAndView modelAndView) {
 
                 modelAndView.addObject("users", userServiceImpl.getPage(pageNumber, size));

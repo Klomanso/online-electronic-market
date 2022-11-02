@@ -3,28 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Edit Good Info</title>
-        <link href="/css/common.css" rel="stylesheet">
-        <link rel="stylesheet" href="/css/navbar.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-              crossorigin="anonymous">
+        <div th:replace="fragments/navbar :: header-css"></div>
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     </head>
     <body>
-    <nav>
-        <label>Edit good info</label>
-        <ul>
-
-            <li><a id="home-link" href="/">Home</a></li>
-            <li><a id="users-link" href="/users">Users</a></li>
-            <li class="active"><a id="goods-link" href="/goods">Goods</a></li>
-            <li><a id="orders-link" href="/orders">Orders</a></li>
-
-        </ul>
-    </nav>
-    <script src="/js/nav_ul_li.js"></script>
-    <script src="/js/scroll.js"></script>
-
+    <div th:replace="fragments/navbar :: header"></div>
     <br><br><br><br><br>
 
     <div class="page-content">
@@ -36,59 +19,28 @@
                         <input class="form-control" type="text" th:field="*{name}" id="fullName" placeholder="Full Name">
                         <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     </div>
-<!--
-                    <label for="good-name">Name:</label>
-                    <input id="good-name" type="text" name="good-name" required th:field="*{name}">
-                    <br>
-                    <br>
--->
                     <div class="form-group">
                         <label for="good-price">Price</label>
                         <input class="form-control" type="number" min="0.01" step="0.01" th:field="*{price}"
                                id="good-price" placeholder="price" required>
                         <div class="alert alert-warning" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
                     </div>
-<!--
-                    <label for="good-price">Price:</label>
-                    <input id="good-price" type="number" min="0.01" step="0.01" name="good-price" required th:field="*{price}">
-                    <br>
-                    <br>
--->
                     <div class="form-group">
                         <label for="good-company">Company</label>
                         <input class="form-control" type="text" th:field="*{company}" id="good-company" placeholder="company">
                         <div class="alert alert-warning" th:if="${#fields.hasErrors('company')}" th:errors="*{company}"></div>
                     </div>
-<!--
-                    <label for="good-company">Company:</label>
-                    <input id="good-company" type="text" name="good-company" required th:field="*{company}">
-                    <br>
-                    <br>
--->
                     <div class="form-group">
                         <label for="good-assembly-place">Made in</label>
                         <input class="form-control" type="text" th:field="*{assemblyPlace}" id="good-assembly-place"
                                placeholder="assembly-place">
                         <div class="alert alert-warning" th:if="${#fields.hasErrors('assemblyPlace')}" th:errors="*{assemblyPlace}"></div>
                     </div>
-<!--
-                    <label for="good-assembly-place">Made in:</label>
-                    <input id="good-assembly-place" type="text" name="good-assembly-place" required th:field="*{assemblyPlace}">
-                    <br>
-                    <br>
--->
                     <div class="form-group">
                         <label for="good-quantity">Quantity</label>
                         <input class="form-control" type="number" min="0" th:field="*{quantity}"
                                id="good-quantity" placeholder="quantity" required>
                         <div class="alert alert-warning" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
-<!--
-                    </div>
-                    <label for="good-quantity">Quantity:</label>
-                    <input id="good-quantity" type="number" min="0" name="good-quantity" required th:field="*{quantity}">
-                    <br>
-                    <br>
--->
                         <div class="form-group">
                             <label for="good-description">Description</label>
                             <input class="form-control" type="text" th:field="*{description}" id="good-description"
@@ -96,12 +48,6 @@
                             <div class="alert alert-warning" th:if="${#fields.hasErrors('description')}"
                                  th:errors="*{description}"></div>
                         </div>
-<!--
-                    <label for="good-description">Description:</label>
-                    <input id="good-description" type="text" name="good-description" th:field="*{description}">
-                    <br>
-                    <br>
--->
                     <label for="good-type">Type:</label>
                     <br>
                     <select class="form-select" id="good-type" th:field="*{appType}" name="good-type-id" size="4" required>

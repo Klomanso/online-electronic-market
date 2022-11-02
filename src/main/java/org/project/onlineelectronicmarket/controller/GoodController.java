@@ -31,14 +31,9 @@ public class GoodController {
         }
 
         @GetMapping("/goods")
-        public ModelAndView getGoods(@RequestParam(value = "pageNumber", required = false, defaultValue = "1")
-                                     int pageNumber,
-                                     @RequestParam(value = "size", required = false, defaultValue = "5")
-                                     int size,
-                                     ModelAndView modelAndView) {
-
+        public ModelAndView getGoods(ModelAndView modelAndView) {
                 modelAndView.addObject("types", appTypeServiceImpl.findAllByOrderByName());
-                modelAndView.addObject("goods", goodServiceImpl.getPage(pageNumber, size));
+                modelAndView.addObject("goods", goodServiceImpl.findAllByOrderByName());
                 modelAndView.setViewName("good/goods");
                 return modelAndView;
         }
@@ -47,6 +42,7 @@ public class GoodController {
         public ModelAndView getGoodsByQuery(@RequestParam(name = "good-query") String query,
                                             ModelAndView modelAndView) {
                 modelAndView.addObject("goods", goodServiceImpl.findAllMatches(query));
+                modelAndView.addObject("types", appTypeServiceImpl.findAllByOrderByName());
                 modelAndView.addObject("query", new ErrorMsg(query));
                 modelAndView.setViewName("good/goodsFound");
                 return modelAndView;
@@ -56,6 +52,7 @@ public class GoodController {
         public ModelAndView getGoodsByFilter(HttpServletRequest request, ModelAndView modelAndView) {
                 HashMap<String, String[]> filterParams = new HashMap<>(request.getParameterMap());
                 modelAndView.addObject("goods", goodServiceImpl.findAllByFilter(filterParams));
+                modelAndView.addObject("types", appTypeServiceImpl.findAllByOrderByName());
                 modelAndView.setViewName("good/goodsFilter");
                 return modelAndView;
         }
