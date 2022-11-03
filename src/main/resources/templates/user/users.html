@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
@@ -15,7 +16,7 @@
 
 <div class="page-content">
 
-    <nav class="navbar" style="margin: auto">
+    <nav sec:authorize="hasRole('ADMIN')" class="navbar" style="margin: auto">
         <a id="add-user-button" class="btn btn-outline-dark" th:href="@{/user/add}"
            role="button">Add user</a>
     </nav>

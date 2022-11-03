@@ -14,6 +14,8 @@ public interface UserService {
 
         Optional<User> update(User newUser);
 
+        User findByName(String name);
+
         Optional<User> findById(Long id);
 
         List<User> findAll();

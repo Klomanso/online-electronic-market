@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:replace="fragments/navbar :: header-css"></div>
+    <style>
+        .gradient-custom-3 {
+            /* fallback for old browsers */
+            background: #84fab0;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
+        }
+
+        .gradient-custom-4 {
+            /* fallback for old browsers */
+            background: #84fab0;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
+        }
+    </style>
+</head>
+<body>
+
+<section class="vh-100 bg-image" >
+    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">Create an account</h2>
+
+                            <form method="POST" th:action="@{/registration}" th:object="${user}">
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" th:field="*{name}" id="fullName">
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}"
+                                         th:errors="*{name}"></div>
+                                    <div class="alert alert-danger" th:if="${existsByName}" th:text="${message}"></div>
+                                    <label for="fullName">Your Name</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" th:field="*{email}" id="email">
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}"
+                                         th:errors="*{email}"></div>
+                                    <label for="email">Your Email</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" th:field="*{number}" id="number">
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('number')}"
+                                         th:errors="*{number}"></div>
+                                    <label for="number">Phone</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" th:field="*{address}" id="address">
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('address')}"
+                                         th:errors="*{address}"></div>
+                                    <label for="address">Address</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="password" th:field="*{password}" id="password">
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('password')}"
+                                         th:errors="*{password}"></div>
+                                    <label for="password">Password</label>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit"
+                                            class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                        Register
+                                    </button>
+                                </div>
+
+                                <p class="text-center text-muted mt-5 mb-0">Have already an account?
+                                    <a href="/login" class="fw-bold text-body"><u>Login here</u></a></p>
+                                <a class="fw-bold text-body" href="/">home</a>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

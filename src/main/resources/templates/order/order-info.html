@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Order Info</title>
@@ -69,7 +70,7 @@
     <div id="order-actions">
         <form method="POST" action="/order-update-status">
             <input type="hidden" name="order-id" th:value="${order.id}">
-            <button id="update-order-status-button" class="btn btn-warning" type="submit">
+            <button sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" id="update-order-status-button" class="btn btn-warning" type="submit">
                 Update order status
             </button>
         </form>

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.project.onlineelectronicmarket.model.Order;
 import org.project.onlineelectronicmarket.model.User;
+import org.project.onlineelectronicmarket.model.enums.Roles;
 import org.project.onlineelectronicmarket.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,6 +63,7 @@ public class UserController {
                         modelAndView.setViewName("error/invalid-action");
                 } else {
                         modelAndView.addObject("add", false);
+                        modelAndView.addObject("roles", Roles.values());
                         modelAndView.addObject("user", foundUser.get());
                         modelAndView.setViewName("user/userEdit");
                 }
@@ -72,6 +74,7 @@ public class UserController {
         public ModelAndView showAddUser(ModelAndView modelAndView) {
 
                 modelAndView.addObject("add", true);
+                modelAndView.addObject("roles", Roles.values());
                 modelAndView.addObject("user", new User());
                 modelAndView.setViewName("user/userEdit");
 

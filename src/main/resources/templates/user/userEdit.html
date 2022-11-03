@@ -41,22 +41,24 @@
                         <div class="alert alert-warning" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></div>
                     </div>
 
-                  <!--  <label for="user-name">Name:</label>
-                    <input id="user-name" type="text" name="user-name" required th:field="*{name}">
-                    <br>
-                    <br>
-                    <label for="user-address">Address:</label>
-                    <input id="user-address" type="text" name="user-address" required th:field="*{address}">
-                    <br>
-                    <br>
-                    <label for="user-email">Email:</label>
-                    <input id="user-email" type="text" name="user-email" required th:field="*{email}">
-                    <br>
-                    <br>
-                    <label for="user-number">Phone:</label>
-                    <input id="user-number" type="text" name="user-number" th:field="*{number}">
-                    <br>
-                    <br>-->
+                    <div class="form-outline mb-4">
+                        <label for="password">Password</label>
+                        <input class="form-control" type="password" required th:field="*{password}" id="password">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('password')}"
+                             th:errors="*{password}"></div>
+                    </div>
+
+                    <div>
+                        <label>Roles:
+                            <input type="checkbox" multiple name="roles"
+                                   th:each="role : ${roles}"
+                                   th:text="${role}"
+                                   th:value="${role.name}"
+                                   th:field="*{roles}"
+                            />
+                        </label>
+                    </div>
+
                     <button id="save-user-button" class="btn btn-success" type="submit">
                         Save
                     </button>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
     <title>UserInfo</title>
@@ -143,13 +144,23 @@
                         </div>
                         <hr>
                         <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Permissions</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary" th:text="${user.roles}">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
                             <div class="col-sm-12">
                                 <div id="user-actions">
-                                    <form style="margin: 0 100px 0 0" class="align-content-center"
+                                    <form style="margin: 0 100px 0 0"
                                           th:action="@{/user/delete/{id}(id=${user.id})}" method="POST">
-                                        <a class="btn btn-warning" style="margin: 0 0 0 100px"
+                                        <a sec:authorize="hasRole('ADMIN')"
+                                           class="btn btn-warning" style="margin: 0 0 0 100px;"
                                            th:href="@{/userEdit/{id}(id=${user.id})}" role="button">Edit</a>
-                                        <input type="submit" class="btn btn-danger" th:value="Delete"/>
+                                        <input sec:authorize="hasRole('ADMIN')" type="submit"
+                                               class="btn btn-danger" th:value="Delete"/>
                                     </form>
                                 </div>
                             </div>

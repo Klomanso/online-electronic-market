@@ -3,6 +3,10 @@
 <head>
     <div th:fragment="header-css">
         <link href="/css/common.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
+                integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
+                crossorigin="anonymous"></script>
         <link rel="stylesheet" href="/css/double_slider_p.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -26,22 +30,38 @@
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/users">Users</a>
+                        <div sec:authorize="hasRole('ADMIN') or hasRole('MANAGER')">
+                            <a class="nav-link" href="/users">Users</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/goods">Goods</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/orders">Orders</a>
+                        <div sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/orders">Orders</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="true">
+                                Account
+                            </button>
+                            <ul class="dropdown-menu">
+                                <div sec:authorize="isAnonymous()">
+                                    <li><a class="dropdown-item" href="/registration">Sign up</a></li>
+                                </div>
+                                <div sec:authorize="isAnonymous()">
+                                    <li><a class="dropdown-item" href="/login">Sign in</a></li>
+                                </div>
+                                <div sec:authorize="isAuthenticated()">
+                                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                </div>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
-<!--
-                <form class="d-flex" role="search" method="GET" action="/goodsFound">
-                    <input class="form-control me-2" name="good-query" type="search" placeholder="Search"
-                           aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
--->
             </div>
         </div>
     </nav>

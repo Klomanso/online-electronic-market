@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Goods</title>
@@ -21,9 +22,6 @@
         <div class="badge">Hot</div>
         <div class="product-tumb">
             <img th:src="${good.image}" th:alt="${good.name}">
-            <!--
-                        <img src="https://i.imgur.com/xdbHo4E.png" alt="">
-            -->
         </div>
         <div class="product-details">
             <span class="product-catagory" th:text="${good.appType.name}"></span>
@@ -35,12 +33,6 @@
             <p th:text="${good.description}"></p>
             <div class="product-bottom-details">
                 <div class="product-price" th:text="${good.price}"></div>
-                <!--
-                                <div class="product-links">
-                                    <a href=""><i class="fa fa-heart"></i></a>
-                                    <a href=""><i class="fa fa-shopping-cart"></i></a>
-                                </div>
-                -->
             </div>
         </div>
     </div>
@@ -113,7 +105,8 @@
 
         <button id="find-by-filter" style="margin: 0 0 0 100px" class="btn btn-warning" type="submit">Find</button>
         <button id="reset-filters" style="margin: 0 100px 0 0" class="btn btn-danger" type="reset">Reset</button>
-        <a id="add-good-button" style="margin: 100px 100px 100px 100px"
+        <a id="add-good-button" style="margin: 100px 100px 100px 100px" sec:authorize="hasRole('ADMIN') or
+            hasRole('MANAGER')"
            class="btn btn-outline-success" th:href="@{/good/add}"
            role="button">Add good</a>
         <br><br><br><br>

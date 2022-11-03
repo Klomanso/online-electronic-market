@@ -26,20 +26,24 @@
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/users">Users</a>
+                        <div sec:authorize="hasRole('ADMIN') or hasRole('MANAGER')">
+                            <a class="nav-link" href="/users">Users</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/goods">Goods</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/orders">Orders</a>
+                        <div sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/orders">Orders</a>
+                        </div>
                     </li>
                 </ul>
-                                <form class="d-flex" role="search" method="GET" action="/goodsFound">
-                                    <input class="form-control me-2" name="good-query" type="search" placeholder="Search"
-                                           aria-label="Search">
-                                    <button class="btn btn-outline-success" type="submit">Search</button>
-                                </form>
+                <form class="d-flex" role="search" method="GET" action="/goodsFound">
+                    <input class="form-control me-2" name="good-query" type="search" placeholder="Search"
+                           aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
             </div>
         </div>
     </nav>
